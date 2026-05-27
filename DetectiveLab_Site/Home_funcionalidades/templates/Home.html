@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DetectiveLab</title>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+
+  
+  <link rel="stylesheet" href="{% static 'Css/home.css' %}">
+</head>
+<body>
+
+ 
+  <div class="bg-base"></div>
+
+  
+  <div class="carousel">
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+  </div>
+  <div class="overlay"></div>
+
+  <main class="hero">
+
+    
+    <header class="topbar">
+    
+      <nav>
+        <ul class="nav">
+          <li><a href="#">Registrar</a></li>
+          <li><a href="#">Login</a></li>
+          <li><a href="#">Sobre mim</a></li>
+        </ul>
+      </nav>
+    </header>
+
+   
+    <section class="content">
+      <div class="headline">
+        <h1 class="typed" id="typed"><span class="cursor" id="cursor"></span></h1>
+      </div>
+
+      <div class="detective">
+        <img src="{% static 'images/Detetive.png' %}" alt="Detetive">
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+   
+    document.addEventListener('DOMContentLoaded', function () {
+      var typed  = document.getElementById('typed');
+      var cursor = document.getElementById('cursor');
+
+      
+      var parts = [
+        { text: 'O mundo \u00e9 feito de ', red: false },
+        { text: 'quartos trancados.',   red: true  }
+      ];
+
+      var pi = 0, ci = 0, current = null;
+
+      function type() {
+        if (pi >= parts.length) {      
+          cursor.classList.add('done');
+          return;
+        }
+        var part = parts[pi];
+        if (ci === 0) {
+          current = document.createElement('span');
+          if (part.red) current.className = 'hl';
+          typed.insertBefore(current, cursor);
+        }
+        current.textContent += part.text.charAt(ci);
+        ci++;
+        if (ci >= part.text.length) { pi++; ci = 0; }
+        setTimeout(type, 65);
+      }
+
+      type();
+    });
+  </script>
+
+</body>
+</html>
