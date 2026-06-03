@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DetectiveLab - Registro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'Css/register.css' %}">
+</head>
+<body>
+
+  <div class="bg-base"></div>
+  <div class="overlay"></div>
+
+  <main class="auth-wrap">
+    <section class="auth-card">
+      <h1>Criar <span class="hl">conta</span></h1>
+      <p class="sub">DetectiveLab</p>
+
+      <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {# ---------- CIRCULO DE FOTO ---------- #}
+        <div class="photo-field">
+          <label class="photo-upload" for="{{ form.foto.id_for_label }}" title="Clique para adicionar foto">
+            <img id="photo-preview" alt="" hidden>
+            <div class="photo-placeholder">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span>Adicionar foto</span>
+            </div>
+          </label>
+          {# O input real fica escondido via CSS; o label acima dispara o clique. #}
+          {{ form.foto }}
+          {% if form.foto.errors %}
+            <div class="field-errors">{{ form.foto.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <label for="{{ form.username.id_for_label }}">Nome de usuário</label>
+          {{ form.username }}
+          {% if form.username.errors %}
+            <div class="field-errors">{{ form.username.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <label for="{{ form.email.id_for_label }}">E-mail</label>
+          {{ form.email }}
+          {% if form.email.errors %}
+            <div class="field-errors">{{ form.email.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <label for="{{ form.password1.id_for_label }}">Senha</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+            <div class="field-errors">{{ form.password1.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="field">
+          <label for="{{ form.password2.id_for_label }}">Confirmar senha</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+            <div class="field-errors">{{ form.password2.errors }}</div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="btn-submit">Registrar</button>
+      </form>
+
+      <p class="auth-foot">
+        Já tem conta? <a href="#">Entrar</a>
+      </p>
+    </section>
+  </main>
+
+  <script>
+    
+    (function () {
+      var field = document.querySelector('.photo-field');
+      if (!field) return;
+      var input = field.querySelector('input[type="file"]');
+      var preview = document.getElementById('photo-preview');
+      var placeholder = field.querySelector('.photo-placeholder');
+
+      input.addEventListener('change', function (e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        preview.src = URL.createObjectURL(file);
+        preview.hidden = false;
+        placeholder.hidden = true;
+      });
+    })();
+  </script>
+
+</body>
+</html>
