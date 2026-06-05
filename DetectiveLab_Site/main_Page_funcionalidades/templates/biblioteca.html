@@ -1,0 +1,639 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Biblioteca - DetectiveLab</title>
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link rel="stylesheet" href="{% static 'Css/biblioteca.css' %}">
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-background": "#e2e2e2", "surface": "#121414",
+            "surface-container-highest": "#333535", "surface-bright": "#38393a",
+            "surface-container-high": "#282a2b", "surface-container": "#1e2020",
+            "surface-container-low": "#1a1c1c", "surface-container-lowest": "#0d0e0f",
+            "surface-variant": "#333535", "on-surface": "#e2e2e2",
+            "on-surface-variant": "#e4beba", "outline": "#ab8985",
+            "outline-variant": "#5b403d", "primary": "#ffb3ac",
+            "primary-container": "#d32f2f", "on-primary": "#680008",
+            "on-primary-container": "#fff2f0", "secondary": "#c8c6c5",
+            "secondary-container": "#474746", "background": "#121414",
+            "inverse-primary": "#ba1a20"
+          },
+          spacing: {
+            "container-max-width": "1200px", "unit": "8px",
+            "margin": "40px", "gutter": "24px"
+          },
+          fontFamily: {
+            "headline-lg-mobile": ["Playfair Display"],
+            "headline-lg": ["Playfair Display"],
+            "headline-xl": ["Playfair Display"],
+            "body-md": ["Archivo Narrow"],
+            "label-sm": ["Archivo Narrow"]
+          },
+          fontSize: {
+            "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+            "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+            "headline-xl": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+            "label-sm": ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col nocturnal-bg">
+
+ 
+  <header class="bg-background/95 backdrop-blur-md sticky top-0 z-40 border-b border-surface-container-highest">
+    <div class="flex justify-between items-center w-full px-10 py-4 max-w-[container-max-width] mx-auto">
+
+      <a class="font-headline-lg text-headline-lg text-on-surface uppercase" href="{% url 'main_page' %}">DETECTIVELAB</a>
+
+      <nav class="hidden md:flex gap-8 items-center">
+        <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest"
+           href="{% url 'main_page' %}">Home</a>
+        <a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm uppercase tracking-widest"
+           href="#">Biblioteca</a>
+        <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest"
+           href="#">Comunidade</a>
+      </nav>
+
+      <div class="flex items-center gap-4 text-primary">
+        <button aria-label="notificacoes" class="hover:text-primary transition-all duration-300 active:scale-95">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+
+        <div class="w-9 h-9 rounded-full bg-surface-container-highest overflow-hidden border border-surface-variant
+                    hover:border-primary transition-colors ml-2 active:scale-95 flex items-center justify-center">
+          {% if user.foto %}
+            <img src="{{ user.foto.url }}" alt="{{ user.username }}" class="w-full h-full object-cover">
+          {% else %}
+            <span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+          {% endif %}
+        </div>
+
+        <form method="post" action="{% url 'logout' %}" class="logout-form ml-2">
+          {% csrf_token %}
+          <button type="submit"
+                  class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant
+                         hover:text-primary transition-colors duration-300">
+            Sair
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+
+  <main class="flex-grow flex flex-col items-center w-full px-4 md:px-margin py-12 max-w-[container-max-width] mx-auto z-10 relative">
+
+    <section class="w-full max-w-4xl text-center mb-16 relative">
+      <span class="material-symbols-outlined text-primary/20 text-6xl absolute -top-8 left-1/2 -translate-x-1/2 select-none">format_quote</span>
+      <blockquote class="relative z-10">
+        <p class="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface italic mb-4 leading-tight">
+          "Nao ha nada de misterioso neste mundo, Sekiguchi"
+        </p>
+        <footer class="font-label-sm text-label-sm text-primary tracking-widest uppercase flex items-center justify-center gap-2">
+          <span class="w-8 h-[1px] bg-primary/50"></span>
+          Ubume no Natsu
+          <span class="w-8 h-[1px] bg-primary/50"></span>
+        </footer>
+      </blockquote>
+    </section>
+
+    <section class="w-full flex flex-col md:flex-row justify-between items-end gap-6 mb-12 border-b border-surface-container-highest pb-6">
+      <div class="w-full md:w-1/2 relative">
+        <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2 block"
+               for="case-filter">Filtrar Evidencias</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">search</span>
+          <input class="input-ledgewood w-full pl-10 py-2 text-on-surface text-body-md placeholder-on-surface-variant/40 bg-transparent"
+                 id="case-filter" placeholder="Digite o titulo do caso..." type="text" autocomplete="off">
+        </div>
+      </div>
+
+      <button id="add-case-btn" type="button"
+              class="bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest
+                     px-8 py-3 hover:bg-inverse-primary transition-colors active:scale-95
+                     flex items-center gap-2 shadow-[0_0_15px_rgba(211,47,47,0.2)]">
+        <span class="material-symbols-outlined text-sm">add</span>
+        Adicionar Novo Caso
+      </button>
+    </section>
+
+    <section class="w-full">
+      <div id="cards-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+        {% for numero, livro in livros_com_numero %}
+
+          <article class="evidence-card bg-surface-container/80 border border-surface-variant p-2
+                          flex flex-col gap-2 group backdrop-blur-sm relative cursor-pointer"
+                   data-livro-id="{{ livro.pk }}"
+                   data-title="{{ livro.titulo }}"
+                   data-descricao="{{ livro.descricao }}"
+                   data-status="{{ livro.status }}"
+                   data-numero="{{ numero }}"
+                   {% if livro.capa %}data-capa="{{ livro.capa.url }}"{% endif %}>
+
+            <div class="relative w-full aspect-square bg-surface-container-lowest overflow-hidden border border-surface-container-highest">
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors z-10 duration-500"></div>
+
+              {% if livro.capa %}
+                <img alt="{{ livro.titulo }}"
+                     class="w-full h-full object-cover mix-blend-luminosity group-hover:mix-blend-normal
+                            transition-all duration-700 scale-100 group-hover:scale-105"
+                     src="{{ livro.capa.url }}">
+              {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                  <span class="material-symbols-outlined text-4xl text-surface-container-highest group-hover:text-primary transition-colors">book</span>
+                </div>
+              {% endif %}
+            </div>
+
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                {% if livro.status == 'aberto' %}
+                  <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                  <span class="text-[9px] text-on-surface-variant uppercase tracking-wider">Caso #{{ numero }} &mdash; Aberto</span>
+                {% elif livro.status == 'frio' %}
+                  <span class="w-2 h-2 rounded-full bg-surface-variant"></span>
+                  <span class="text-[9px] text-on-surface-variant uppercase tracking-wider">Caso #{{ numero }} &mdash; Frio</span>
+                {% elif livro.status == 'concluido' %}
+                  <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                  <span class="text-[9px] text-on-surface-variant uppercase tracking-wider">Caso #{{ numero }} &mdash; Concluido</span>
+                {% endif %}
+              </div>
+              <h3 class="font-bold text-sm text-on-surface mb-1 line-clamp-1">{{ livro.titulo }}</h3>
+              <p class="text-on-surface-variant text-[10px] leading-tight line-clamp-2">{{ livro.descricao }}</p>
+            </div>
+          </article>
+
+        {% empty %}
+          <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+            <span class="material-symbols-outlined text-6xl text-surface-container-highest mb-6">menu_book</span>
+            <p class="text-on-surface-variant font-body-md italic max-w-sm">
+              Sua biblioteca esta vazia. Adicione seu primeiro caso para comecar a investigação.
+            </p>
+          </div>
+        {% endfor %}
+
+      </div>
+
+      <div id="search-empty" class="hidden flex-col items-center justify-center py-20 text-center">
+        <span class="material-symbols-outlined text-6xl text-surface-container-highest mb-6">search_off</span>
+        <p class="text-on-surface-variant font-body-md italic">Nenhum caso encontrado para esta busca.</p>
+      </div>
+    </section>
+
+  </main>
+
+ 
+  <footer class="bg-surface-container-lowest border-t border-surface-container-highest relative z-20">
+    <div class="flex flex-col md:flex-row justify-between items-center w-full px-10 py-12 gap-gutter max-w-[container-max-width] mx-auto">
+      <div class="font-headline-lg text-headline-lg text-on-surface">DETECTIVELAB</div>
+      <nav class="flex flex-wrap justify-center gap-6">
+        <a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface underline decoration-primary decoration-2 underline-offset-4" href="#">Arquivos</a>
+        <a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface underline decoration-primary decoration-2 underline-offset-4" href="#">Arquivo de Evidencias</a>
+        <a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface underline decoration-primary decoration-2 underline-offset-4" href="#">Politica de Privacidade</a>
+        <a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-on-surface underline decoration-primary decoration-2 underline-offset-4" href="#">Contatar Agencia</a>
+      </nav>
+      <div class="font-label-sm text-label-sm uppercase tracking-wider text-primary opacity-60">
+        &copy; 1887-2025 DETECTIVELAB. TODAS AS PISTAS RESERVADAS.
+      </div>
+    </div>
+  </footer>
+
+ 
+  <div id="add-modal" class="case-modal" aria-hidden="true">
+    <form id="add-form" method="post" action="{% url 'criar_livro' %}" enctype="multipart/form-data"
+          class="add-modal-card glass-panel">
+      {% csrf_token %}
+
+      <button type="button" id="add-close" aria-label="Fechar"
+              class="absolute top-6 right-6 text-on-surface-variant hover:text-primary transition-colors z-20">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <h1 class="font-headline-xl text-headline-xl mb-8 text-center text-on-surface tracking-tight uppercase border-b border-outline-variant/20 pb-6">
+        Registrar Novo Caso
+      </h1>
+
+      <div class="flex flex-col md:flex-row gap-8">
+
+       
+        <div class="w-full md:w-1/3">
+          <label for="add-capa"
+                 class="flex items-center justify-center
+                        border-2 border-dashed border-outline-variant/50
+                        bg-surface-dim/30 hover:bg-surface-dim/50 hover:border-primary/50
+                        transition-all duration-300
+                        h-full min-h-[300px]
+                        cursor-pointer relative group rounded-lg overflow-hidden">
+
+            <img id="add-capa-preview" alt="" hidden
+                 class="absolute inset-0 w-full h-full object-cover z-10">
+
+            <div id="add-capa-placeholder" class="flex flex-col items-center justify-center text-center px-4">
+              <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors mb-4">camera_alt</span>
+              <p class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant group-hover:text-primary transition-colors">
+                Adicionar Capa do Dossie
+              </p>
+            </div>
+
+            <input id="add-capa" name="capa" type="file" accept="image/*"
+                   class="absolute inset-0 opacity-0 cursor-pointer z-20">
+          </label>
+        </div>
+
+  
+        <div class="w-full md:w-2/3 space-y-8">
+
+          <div class="space-y-6">
+            <div>
+              <label class="sr-only" for="add-titulo">Titulo do Caso</label>
+              <input id="add-titulo" name="titulo" type="text" required
+                     placeholder="TITULO DO CASO"
+                     class="input-noir w-full py-3">
+            </div>
+            <div>
+              <label class="sr-only" for="add-descricao">Descricao</label>
+              <textarea id="add-descricao" name="descricao" rows="5"
+                        placeholder="DESCRICAO INICIAL DOS FATOS..."
+                        class="input-noir w-full py-3 resize-none"></textarea>
+            </div>
+          </div>
+
+          <!-- Estado de resolucao -->
+          <div class="space-y-4">
+            <p class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
+              ESTADO DE RESOLUCAO
+            </p>
+            <div class="flex flex-wrap gap-4">
+
+              <label class="flex-1 min-w-[100px] cursor-pointer">
+                <input checked class="peer sr-only" name="status" type="radio" value="aberto">
+                <div class="w-full text-center py-3 border border-outline-variant bg-surface-dim text-on-surface
+                            font-label-sm text-label-sm uppercase tracking-widest
+                            peer-checked:bg-primary-container peer-checked:text-on-primary-container peer-checked:border-primary-container
+                            transition-all rounded-md">
+                  ABERTO
+                </div>
+              </label>
+
+              <label class="flex-1 min-w-[100px] cursor-pointer">
+                <input class="peer sr-only" name="status" type="radio" value="concluido">
+                <div class="w-full text-center py-3 border border-outline-variant bg-surface-dim text-on-surface
+                            font-label-sm text-label-sm uppercase tracking-widest
+                            peer-checked:bg-surface-container-high peer-checked:text-on-surface peer-checked:border-on-surface
+                            transition-all rounded-md">
+                  CONCLUIDO
+                </div>
+              </label>
+
+              <label class="flex-1 min-w-[100px] cursor-pointer">
+                <input class="peer sr-only" name="status" type="radio" value="frio">
+                <div class="w-full text-center py-3 border border-outline-variant bg-surface-dim text-on-surface
+                            font-label-sm text-label-sm uppercase tracking-widest
+                            peer-checked:bg-tertiary-container peer-checked:text-on-tertiary-container peer-checked:border-tertiary-container
+                            transition-all rounded-md">
+                  FRIO
+                </div>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- Botoes -->
+          <div class="flex justify-end gap-4 pt-8 border-t border-outline-variant/20">
+            <button type="button" id="add-cancel" class="btn-secondary-add rounded-md">Cancelar</button>
+            <button type="submit" class="btn-primary-add rounded-md flex items-center gap-2">
+              Criar Dossie
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+
+  
+  <div id="case-modal" class="case-modal" aria-hidden="true">
+    <form id="case-form" method="post" action="" class="case-modal-card">
+      {% csrf_token %}
+      <input type="hidden" name="status" id="case-status">
+
+      <button type="button" id="case-close" aria-label="Fechar"
+              class="absolute top-4 right-4 z-30 text-on-surface-variant hover:text-primary transition-colors duration-300">
+        <span class="material-symbols-outlined text-[32px]">close</span>
+      </button>
+
+     
+      <div class="w-full md:w-5/12 h-64 md:h-auto relative border-b md:border-b-0 md:border-r border-surface-container-highest bg-surface-container-lowest">
+        <div id="case-cover" class="absolute inset-0 bg-cover bg-center"></div>
+        <div id="case-cover-placeholder" class="absolute inset-0 flex items-center justify-center">
+          <span class="material-symbols-outlined text-6xl text-surface-container-highest">book</span>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent opacity-80 md:opacity-50 pointer-events-none"></div>
+      </div>
+
+   
+      <div class="w-full md:w-7/12 p-margin flex flex-col justify-between max-h-[90vh] overflow-y-auto">
+
+        <div>
+         
+          <div class="flex items-center gap-2 text-primary font-label-sm text-label-sm uppercase tracking-widest mb-4">
+            <span class="material-symbols-outlined text-[16px]">folder_open</span>
+            <span>Caso #<span id="case-numero">000</span></span>
+          </div>
+
+   
+          <h2 id="case-titulo" class="font-headline-xl text-headline-xl text-on-surface mb-6 md:mb-8">Titulo</h2>
+
+     
+          <div class="mb-8">
+            <h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-4">Estado de Resolucao</h3>
+            <div class="flex gap-2 flex-wrap">
+              <button type="button" class="status-btn" data-status="aberto">
+                <span class="material-symbols-outlined text-[16px] icon-checked">radio_button_checked</span>
+                <span class="material-symbols-outlined text-[16px] icon-unchecked">radio_button_unchecked</span>
+                <span>Aberto</span>
+              </button>
+              <button type="button" class="status-btn" data-status="concluido">
+                <span class="material-symbols-outlined text-[16px] icon-checked">radio_button_checked</span>
+                <span class="material-symbols-outlined text-[16px] icon-unchecked">radio_button_unchecked</span>
+                <span>Concluido</span>
+              </button>
+              <button type="button" class="status-btn" data-status="frio">
+                <span class="material-symbols-outlined text-[16px] icon-checked">radio_button_checked</span>
+                <span class="material-symbols-outlined text-[16px] icon-unchecked">radio_button_unchecked</span>
+                <span>Frio</span>
+              </button>
+            </div>
+          </div>
+
+         
+          <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Descricao</h3>
+              <button type="button" id="case-edit-btn"
+                      class="text-primary hover:text-inverse-primary transition-colors flex items-center gap-1 font-label-sm text-label-sm uppercase tracking-widest">
+                <span class="material-symbols-outlined text-[16px]">edit</span>
+                <span id="case-edit-label">Editar</span>
+              </button>
+            </div>
+            <p id="case-descricao-display" class="font-body-md text-body-md text-on-surface/80 leading-relaxed whitespace-pre-line"></p>
+            <textarea id="case-descricao-edit" name="descricao" rows="6"
+                      class="hidden w-full bg-surface-container-lowest text-on-surface
+                             border border-surface-container-highest focus:border-primary focus:outline-none
+                             resize-y p-3 font-body-md transition-colors duration-300"></textarea>
+          </div>
+
+        
+          <div class="mb-8">
+            <h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px]">edit_note</span>
+              Anotacoes do Detetive
+            </h3>
+            <p class="text-on-surface-variant/70 italic font-body-md">
+              Voce nao tem nenhuma anotacao nesse caso, detetive.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="mt-auto pt-4 border-t border-surface-container-highest flex flex-col-reverse md:flex-row justify-end gap-3">
+          <button type="button"
+                  class="border border-primary text-primary font-label-sm text-label-sm uppercase tracking-widest
+                         px-8 py-4 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center gap-2">
+            <span>Fazer anotacoes</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </button>
+          <button type="submit"
+                  class="bg-primary-container text-white font-label-sm text-label-sm uppercase tracking-widest
+                         px-8 py-4 glow-effect hover:bg-inverse-primary transition-all duration-300
+                         flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">check_circle</span>
+            <span>Fechar Dossie</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // ============== BUSCA ==============
+      const filterInput = document.getElementById('case-filter');
+      const cards       = document.querySelectorAll('.evidence-card');
+      const grid        = document.getElementById('cards-grid');
+      const emptyEl     = document.getElementById('search-empty');
+
+      if (filterInput) {
+        filterInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase().trim();
+          let visiveis = 0;
+          cards.forEach(card => {
+            const titulo = (card.dataset.title || '').toLowerCase();
+            const bate = titulo.includes(query);
+            card.style.display = bate ? '' : 'none';
+            if (bate) visiveis++;
+          });
+          if (cards.length > 0 && visiveis === 0 && query.length > 0) {
+            grid.classList.add('hidden');
+            emptyEl.classList.remove('hidden');
+            emptyEl.classList.add('flex');
+          } else {
+            grid.classList.remove('hidden');
+            emptyEl.classList.add('hidden');
+            emptyEl.classList.remove('flex');
+          }
+        });
+      }
+
+     
+      const modal           = document.getElementById('case-modal');
+      const form            = document.getElementById('case-form');
+      const closeBtn        = document.getElementById('case-close');
+      const tituloEl        = document.getElementById('case-titulo');
+      const numeroEl        = document.getElementById('case-numero');
+      const descDisplay     = document.getElementById('case-descricao-display');
+      const descEdit        = document.getElementById('case-descricao-edit');
+      const editBtn         = document.getElementById('case-edit-btn');
+      const editLabel       = document.getElementById('case-edit-label');
+      const statusInput     = document.getElementById('case-status');
+      const statusBtns      = document.querySelectorAll('.status-btn');
+      const coverEl         = document.getElementById('case-cover');
+      const coverPlaceholder= document.getElementById('case-cover-placeholder');
+
+      function openModal(card) {
+        // Popula campos
+        tituloEl.textContent = card.dataset.title || '';
+        numeroEl.textContent = card.dataset.numero || '';
+        const desc = card.dataset.descricao || '';
+        descDisplay.textContent = desc;
+        descEdit.value = desc;
+
+        
+        descDisplay.classList.remove('hidden');
+        descEdit.classList.add('hidden');
+        editLabel.textContent = 'Editar';
+
+       
+        if (card.dataset.capa) {
+          coverEl.style.backgroundImage = `url('${card.dataset.capa}')`;
+          coverPlaceholder.classList.add('hidden');
+        } else {
+          coverEl.style.backgroundImage = '';
+          coverPlaceholder.classList.remove('hidden');
+        }
+
+       
+        const st = card.dataset.status || 'aberto';
+        statusInput.value = st;
+        statusBtns.forEach(b => b.classList.toggle('selected', b.dataset.status === st));
+
+        
+        form.action = '/inicio/livro/' + card.dataset.livroId + '/editar/';
+
+       
+        modal.classList.add('open');
+        document.body.classList.add('no-scroll');
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+        document.body.classList.remove('no-scroll');
+      }
+
+      
+      cards.forEach(card => {
+        card.addEventListener('click', (e) => {
+         
+          if (e.target.closest('.delete-btn')) return;
+          openModal(card);
+        });
+      });
+
+    
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        if (modal.classList.contains('open')) closeModal();
+        if (document.getElementById('add-modal').classList.contains('open')) {
+          closeAddModal();
+        }
+      });
+
+   
+      editBtn.addEventListener('click', () => {
+        const editando = !descEdit.classList.contains('hidden');
+        if (editando) {
+          
+          descDisplay.textContent = descEdit.value;
+          descDisplay.classList.remove('hidden');
+          descEdit.classList.add('hidden');
+          editLabel.textContent = 'Editar';
+        } else {
+       
+          descDisplay.classList.add('hidden');
+          descEdit.classList.remove('hidden');
+          descEdit.focus();
+          editLabel.textContent = 'Pronto';
+        }
+      });
+
+   
+      statusBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          statusBtns.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          statusInput.value = btn.dataset.status;
+        });
+      });
+
+  
+      form.addEventListener('submit', () => {
+    
+        if (descEdit.classList.contains('hidden')) {
+          descEdit.classList.remove('hidden');
+          descEdit.style.position = 'absolute';
+          descEdit.style.left = '-9999px';
+        }
+      });
+
+   
+      const addModal     = document.getElementById('add-modal');
+      const addOpenBtn   = document.getElementById('add-case-btn');
+      const addClose     = document.getElementById('add-close');
+      const addCancel    = document.getElementById('add-cancel');
+      const addCapaInput = document.getElementById('add-capa');
+      const addCapaImg   = document.getElementById('add-capa-preview');
+      const addCapaPh    = document.getElementById('add-capa-placeholder');
+
+      function openAddModal() {
+        addModal.classList.add('open');
+        document.body.classList.add('no-scroll');
+      }
+      function closeAddModal() {
+        addModal.classList.remove('open');
+        document.body.classList.remove('no-scroll');
+      }
+
+      if (addOpenBtn) addOpenBtn.addEventListener('click', openAddModal);
+      if (addClose)   addClose.addEventListener('click', closeAddModal);
+      if (addCancel)  addCancel.addEventListener('click', closeAddModal);
+
+     
+      addModal.addEventListener('click', (e) => {
+        if (e.target === addModal) closeAddModal();
+      });
+
+  
+      if (addCapaInput) {
+        addCapaInput.addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          addCapaImg.src = URL.createObjectURL(file);
+          addCapaImg.hidden = false;
+          addCapaPh.hidden = true;
+        });
+      }
+
+      document.querySelectorAll('a[href]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (!href || href === '#' || href.startsWith('#') ||
+              href.startsWith('http') || href.startsWith('mailto') ||
+              link.target === '_blank') return;
+          e.preventDefault();
+          document.body.classList.add('leaving');
+          setTimeout(() => { window.location.href = href; }, 250);
+        });
+      });
+
+    });
+  </script>
+
+</body>
+</html>
