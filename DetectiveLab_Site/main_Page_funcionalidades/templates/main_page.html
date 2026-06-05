@@ -102,7 +102,20 @@
     }
   </script>
 </head>
-
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a[href]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#' || href.startsWith('#') ||
+            href.startsWith('http') || link.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.add('leaving');
+        setTimeout(() => { window.location.href = href; }, 250);
+      });
+    });
+  });
+</script>
 <body class="antialiased min-h-screen flex flex-col font-body-md text-body-md">
 
  
@@ -119,7 +132,7 @@
         <a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm uppercase tracking-widest hover:text-primary transition-all duration-300"
            href="#">Ver Arquivos</a>
         <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest"
-           href="#">Biblioteca</a>
+          href="{% url 'biblioteca' %}">Biblioteca</a>
         <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest"
            href="#">Comunidade</a>
       </nav>

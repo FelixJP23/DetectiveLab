@@ -1,22 +1,15 @@
-/* ===========================================================
-   DetectiveLab - Main Page
-   Arquivo: main_Page_funcionalidades/static/Css/main_page.css
 
-   NOTA: os valores de cor são hardcoded em hex porque arquivos
-   CSS externos não processam a função theme() do Tailwind.
-   As cores correspondem exatamente ao tailwind.config do template.
-   =========================================================== */
 
-/* Fundo e cor base do corpo */
+
 body {
   background-color: #121414;
   color: #e2e2e2;
 }
 
-/* ---------- BOTÃO PRIMÁRIO ---------- */
+
 .btn-primary {
-  background-color: #d32f2f;    /* primary-container */
-  color: #fff2f0;               /* on-primary-container */
+  background-color: #d32f2f;    
+  color: #fff2f0;               
   text-transform: uppercase;
   transition: all 0.3s ease;
 }
@@ -25,27 +18,27 @@ body {
   transform: scale(0.98);
 }
 
-/* ---------- CARD DE VIDRO (Ferramentas do Ofício) ---------- */
+
 .glass-card {
   background: rgba(30, 32, 32, 0.7);
   backdrop-filter: blur(10px);
-  border: 1px solid #333535;    /* surface-container-highest */
+  border: 1px solid #333535;   
   transition: all 0.3s ease;
 }
 .glass-card:hover {
-  border-color: #ffb3ac;                          /* primary */
+  border-color: #ffb3ac;                         
   box-shadow: 0 0 20px rgba(255, 179, 172, 0.1);
 }
 
-/* ---------- LINHA VERMELHA DECORATIVA ---------- */
+
 .red-string {
   height: 1px;
-  background: #d32f2f;          /* primary-container */
+  background: #d32f2f;        
   width: 100%;
   opacity: 0.5;
 }
 
-/* ---------- BOTÃO DE LOGOUT no header ---------- */
+
 .logout-form {
   display: flex;
   align-items: center;
@@ -57,3 +50,19 @@ body {
   padding: 0;
   font-family: 'Archivo Narrow', sans-serif;
 }
+
+body {
+  animation: pageIn 0.45s ease-out forwards;
+}
+body.leaving {
+  animation: pageOut 0.25s ease-in forwards;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pageOut {
+  from { opacity: 1; }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+
