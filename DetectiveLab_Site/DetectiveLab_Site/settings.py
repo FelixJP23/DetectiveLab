@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'DetectiveLab_Site',
     'Home_funcionalidades',
     'rest_framework',
+    'main_Page_funcionalidades',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,10 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'Home_funcionalidades.Usuario_customizado'
+
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'main_page'
+LOGOUT_REDIRECT_URL = 'home'
+
+AUTHENTICATION_BACKENDS = ['Home_funcionalidades.backends.EmailBackend']

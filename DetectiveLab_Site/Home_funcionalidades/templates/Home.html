@@ -40,8 +40,17 @@
     
       <nav>
         <ul class="nav">
-          <li><a href="{% url 'Register' %}">Registrar</a></li>
-          <li><a href="#">Login</a></li>
+          {% if user.is_authenticated %}
+  <li>
+    <form method="post" action="{% url 'logout' %}" class="logout-form">
+      {% csrf_token %}
+      <button type="submit">Sair</button>
+    </form>
+  </li>
+{% else %}
+  <li><a href="{% url 'Register' %}">Registrar</a></li>
+  <li><a href="{% url 'login' %}">Login</a></li>
+{% endif %}
           <li><a href="#">Sobre mim</a></li>
         </ul>
       </nav>
