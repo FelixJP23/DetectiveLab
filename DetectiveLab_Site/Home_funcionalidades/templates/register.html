@@ -27,7 +27,7 @@
           <div class="form-errors">{{ form.non_field_errors }}</div>
         {% endif %}
 
-        {# ---------- CIRCULO DE FOTO ---------- #}
+        
         <div class="photo-field">
           <label class="photo-upload" for="{{ form.foto.id_for_label }}" title="Clique para adicionar foto">
             <img id="photo-preview" alt="" hidden>
@@ -39,7 +39,7 @@
               <span>Adicionar foto</span>
             </div>
           </label>
-          {# O input real fica escondido via CSS; o label acima dispara o clique. #}
+          
           {{ form.foto }}
           {% if form.foto.errors %}
             <div class="field-errors">{{ form.foto.errors }}</div>
@@ -82,7 +82,7 @@
       </form>
 
       <p class="auth-foot">
-        Já tem conta? <a href="#">Entrar</a>
+        Já tem conta? <a href="{%url 'login'%}">Entrar</a>
       </p>
     </section>
   </main>
