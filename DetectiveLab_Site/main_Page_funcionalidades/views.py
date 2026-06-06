@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required 
 from django.views.decorators.http import require_POST
-from .models import Livro, Capitulo, Card, Conexao, Subtitulo
+from .models import Livro, Capitulo, Card, Conexao, Subtitulo, AnotacaoCompartilhada
 from django.http import JsonResponse
 import json
 import pytesseract
 from PIL import Image, ImageOps
+import shutil, os
+from django.conf import settings
+from django.core.files.base import ContentFile
 
 @login_required
 def main_page(request):
@@ -87,7 +90,16 @@ def criar_livro(request):
         capa=capa,         
     )
 
+@login_required
+@require_POST
+def excluir_livro(request, livro_id):
+    livro = get_object_or_404(Livro, pk=livro_id, usuario=request.user)
+    livro.delete()
+    return JsonResponse({'ok': True})
     return redirect('biblioteca')
+
+
+
 @login_required
 def quadro(request, livro_id, numero=1):
     livro = get_object_or_404(Livro, pk=livro_id, usuario=request.user)
@@ -214,3 +226,133 @@ def importar_ocr(request, capitulo_id):
         'card_id': card.id,
         'imagem_url': card.imagem.url,
     })
+
+
+
+def serializar_livro(livro):
+    """Congela os capitulos/cards/subtitulos/conexoes de um livro em dict."""
+    capitulos_data = []
+    for cap in livro.capitulos.all().order_by('numero'):
+        cards_data = []
+        # mapeia card.id -> indice, para as conexoes referenciarem por indice
+        card_index = {}
+        for idx, card in enumerate(cap.cards.all().order_by('id')):
+            card_index[card.id] = idx
+            cards_data.append({
+                'titulo': card.titulo,
+                'descricao': card.descricao,
+                'pos_x': card.pos_x,
+                'pos_y': card.pos_y,
+                'imagem': card.imagem.name if card.imagem else None,  # caminho relativo em MEDIA
+                'subtitulos': [
+                    {'titulo': s.titulo, 'conteudo': s.conteudo, 'ordem': s.ordem}
+                    for s in card.subtitulos.all().order_by('ordem')
+                ],
+            })
+        conexoes_data = [
+            {'origem': card_index.get(c.origem_id), 'destino': card_index.get(c.destino_id)}
+            for c in cap.conexoes.all()
+            if c.origem_id in card_index and c.destino_id in card_index
+        ]
+        capitulos_data.append({
+            'numero': cap.numero,
+            'cards': cards_data,
+            'conexoes': conexoes_data,
+        })
+    return capitulos_data
+
+
+def aplicar_snapshot(livro, snapshot):
+    
+    livro.capitulos.all().delete()
+
+    for cap_data in snapshot:
+        cap = Capitulo.objects.create(livro=livro, numero=cap_data['numero'])
+        cards_criados = []  
+
+        for c in cap_data['cards']:
+            novo = Card(
+                capitulo=cap,
+                titulo=c.get('titulo', ''),
+                descricao=c.get('descricao', ''),
+                pos_x=c.get('pos_x', 100),
+                pos_y=c.get('pos_y', 100),
+            )
+            
+            img_name = c.get('imagem')
+            if img_name:
+                origem = os.path.join(settings.MEDIA_ROOT, img_name)
+                if os.path.exists(origem):
+                    with open(origem, 'rb') as f:
+                        novo.imagem.save(os.path.basename(img_name), ContentFile(f.read()), save=False)
+            novo.save()
+            cards_criados.append(novo)
+
+            for s in c.get('subtitulos', []):
+                Subtitulo.objects.create(
+                    card=novo, titulo=s.get('titulo', ''),
+                    conteudo=s.get('conteudo', ''), ordem=s.get('ordem', 0)
+                )
+
+       
+        for con in cap_data.get('conexoes', []):
+            oi, di = con.get('origem'), con.get('destino')
+            if oi is not None and di is not None and oi < len(cards_criados) and di < len(cards_criados):
+                Conexao.objects.create(
+                    capitulo=cap, origem=cards_criados[oi], destino=cards_criados[di]
+                )
+
+
+@login_required
+def arquivo_evidencias(request):
+    import random
+    compartilhadas = list(AnotacaoCompartilhada.objects.all())
+    random.shuffle(compartilhadas)  
+  
+    meus_livros = Livro.objects.filter(usuario=request.user).order_by('id')
+    meus_titulos = list(meus_livros.values_list('titulo', flat=True))
+    return render(request, 'arquivo_evidencias.html', {
+        'compartilhadas': compartilhadas,
+        'meus_livros': meus_livros,
+        'meus_titulos_json': json.dumps(meus_titulos),
+    })
+
+
+@login_required
+@require_POST
+def exportar_anotacoes(request):
+    livro_id = request.POST.get('livro_id')
+    detalhes = request.POST.get('detalhes', '').strip()
+    livro = get_object_or_404(Livro, pk=livro_id, usuario=request.user)
+
+    snapshot = serializar_livro(livro)
+    AnotacaoCompartilhada.objects.create(
+        autor=request.user,
+        titulo_livro=livro.titulo,
+        capa=livro.capa if livro.capa else None,
+        detalhes=detalhes,
+        snapshot=snapshot,
+        qtd_capitulos=len(snapshot),
+    )
+    return redirect('arquivo_evidencias')
+
+
+@login_required
+@require_POST
+def importar_anotacoes(request, export_id):
+    export = get_object_or_404(AnotacaoCompartilhada, pk=export_id)
+
+  
+    livro_destino = Livro.objects.filter(
+        usuario=request.user, titulo=export.titulo_livro
+    ).first()
+
+    if not livro_destino:
+        return JsonResponse({
+            'ok': False,
+            'erro': 'Voce precisa ter "%s" na sua biblioteca para importar.' % export.titulo_livro
+        }, status=400)
+
+  
+    aplicar_snapshot(livro_destino, export.snapshot)
+    return JsonResponse({'ok': True})

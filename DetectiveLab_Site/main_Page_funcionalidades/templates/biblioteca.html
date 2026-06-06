@@ -153,6 +153,11 @@
                    data-capitulos="{{ item.capitulos|join:',' }}"
                    {% if livro.capa %}data-capa="{{ livro.capa.url }}"{% endif %}>
 
+            <button type="button" class="card-delete-btn" aria-label="Excluir caso"
+                    data-livro-id="{{ livro.pk }}" data-titulo="{{ livro.titulo }}">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+
             <div class="relative w-full aspect-square bg-surface-container-lowest overflow-hidden border border-surface-container-highest">
               <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors z-10 duration-500"></div>
 
@@ -427,12 +432,12 @@
 
     
         <div class="mt-auto pt-4 border-t border-surface-container-highest flex flex-col-reverse md:flex-row justify-end gap-3">
-          <button type="button"
-                  class="border border-primary text-primary font-label-sm text-label-sm uppercase tracking-widest
-                         px-8 py-4 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center gap-2">
+          <a id="case-notes-btn" href="#"
+             class="border border-primary text-primary font-label-sm text-label-sm uppercase tracking-widest
+                    px-8 py-4 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center gap-2">
             <span>Fazer anotações</span>
             <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-          </button>
+          </a>
           <button type="submit"
                   class="bg-primary-container text-white font-label-sm text-label-sm uppercase tracking-widest
                          px-8 py-4 glow-effect hover:bg-inverse-primary transition-all duration-300
@@ -445,8 +450,52 @@
     </form>
   </div>
 
+
+  <div id="delete-modal" class="case-modal" aria-hidden="true">
+    <div class="delete-modal-card crystal-glass relative overflow-hidden group">
+      <div class="absolute top-0 left-0 w-full h-[2px] bg-outline-variant/50"></div>
+
+      <div class="flex justify-center mb-6">
+        <div class="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center bg-surface-container-lowest/50">
+          <span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings:'FILL' 1;">delete_forever</span>
+        </div>
+      </div>
+
+      <div class="text-center space-y-4 mb-10">
+        <h2 class="font-headline-lg text-headline-lg md:font-headline-xl md:text-headline-xl text-on-surface tracking-tight">
+          EXCLUIR <span class="text-primary">DOSSIÊ?</span>
+        </h2>
+        <p class="font-body-md text-on-surface-variant max-w-sm mx-auto leading-relaxed">
+          Tem certeza que deseja apagar <span id="delete-titulo" class="text-on-surface font-semibold"></span>?
+          Esta ação não pode ser desfeita.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button type="button" id="delete-cancel"
+                class="w-full sm:w-auto px-8 py-3 bg-transparent border border-on-surface/20 text-on-surface font-label-sm text-label-sm uppercase tracking-widest hover:border-on-surface/50 hover:bg-surface-container-highest transition-all duration-300">
+          CANCELAR
+        </button>
+        <button type="button" id="delete-confirm"
+                class="w-full sm:w-auto px-8 py-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-widest hover:bg-inverse-primary transition-all duration-300">
+          EXCLUIR
+        </button>
+      </div>
+
+      <div class="absolute top-0 left-0 w-4 h-4 border-t border-l border-outline-variant/40 opacity-50"></div>
+      <div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-outline-variant/40 opacity-50"></div>
+      <div class="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-outline-variant/40 opacity-50"></div>
+      <div class="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-outline-variant/40 opacity-50"></div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+
+      function getCsrf() {
+        const el = document.querySelector('[name=csrfmiddlewaretoken]');
+        return el ? el.value : '';
+      }
 
     
       const filterInput = document.getElementById('case-filter');
@@ -561,9 +610,66 @@
       
       cards.forEach(card => {
         card.addEventListener('click', (e) => {
-          
-          if (e.target.closest('.delete-btn')) return;
+      
+          if (e.target.closest('.card-delete-btn')) return;
           openModal(card);
+        });
+      });
+
+    
+      const deleteModal   = document.getElementById('delete-modal');
+      const deleteTitulo  = document.getElementById('delete-titulo');
+      const deleteCancel  = document.getElementById('delete-cancel');
+      const deleteConfirm = document.getElementById('delete-confirm');
+      let livroParaExcluir = null;   // { id, cardEl }
+
+      function abrirDeleteModal(livroId, titulo, cardEl) {
+        livroParaExcluir = { id: livroId, cardEl: cardEl };
+        deleteTitulo.textContent = '"' + (titulo || 'este caso') + '"';
+        deleteModal.classList.add('open');
+        document.body.classList.add('no-scroll');
+      }
+      function fecharDeleteModal() {
+        deleteModal.classList.remove('open');
+        document.body.classList.remove('no-scroll');
+        livroParaExcluir = null;
+      }
+
+      document.querySelectorAll('.card-delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();   // nao abre o modal de detalhes
+          abrirDeleteModal(btn.dataset.livroId, btn.dataset.titulo, btn.closest('.evidence-card'));
+        });
+      });
+
+      deleteCancel.addEventListener('click', fecharDeleteModal);
+      deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) fecharDeleteModal();
+      });
+
+      deleteConfirm.addEventListener('click', () => {
+        if (!livroParaExcluir) return;
+        const { id, cardEl } = livroParaExcluir;
+        deleteConfirm.disabled = true;
+        deleteConfirm.textContent = 'EXCLUINDO...';
+
+        fetch('/inicio/livro/' + id + '/excluir/', {
+          method: 'POST',
+          headers: { 'X-CSRFToken': getCsrf() }
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.ok) {
+            if (cardEl) cardEl.remove();
+            fecharDeleteModal();
+          } else {
+            alert('Nao foi possivel excluir o caso.');
+          }
+        })
+        .catch(() => alert('Erro de conexao ao excluir.'))
+        .finally(() => {
+          deleteConfirm.disabled = false;
+          deleteConfirm.textContent = 'EXCLUIR';
         });
       });
 
@@ -578,6 +684,7 @@
         if (document.getElementById('add-modal').classList.contains('open')) {
           closeAddModal();
         }
+        if (deleteModal.classList.contains('open')) fecharDeleteModal();
       });
 
       

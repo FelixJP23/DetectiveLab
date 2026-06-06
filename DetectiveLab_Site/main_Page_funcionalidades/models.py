@@ -69,9 +69,22 @@ class Conexao(models.Model):
 
 class Subtitulo(models.Model):
     card      = models.ForeignKey(Card, on_delete=models.CASCADE, related_name='subtitulos')
-    titulo    = models.CharField(max_length=300, blank=True)   # o texto do OCR (editavel)
-    conteudo  = models.TextField(blank=True)                   # o que o usuario escreve
+    titulo    = models.CharField(max_length=300, blank=True)   
+    conteudo  = models.TextField(blank=True)                  
     ordem     = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ['ordem', 'id']
+
+
+class AnotacaoCompartilhada(models.Model):
+    autor       = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='exportacoes')
+    titulo_livro = models.CharField(max_length=200)        
+    capa         = models.ImageField(upload_to='export_capas/', blank=True, null=True)
+    detalhes     = models.TextField(blank=True)        
+    snapshot     = models.JSONField()                     
+    qtd_capitulos = models.PositiveIntegerField(default=0)
+    criado_em    = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-criado_em']

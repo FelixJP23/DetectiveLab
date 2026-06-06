@@ -6,6 +6,10 @@ urlpatterns = [
     path('biblioteca/', views.biblioteca,name='biblioteca'),
     path('livro/<int:livro_id>/editar/', views.editar_livro, name='editar_livro'),
     path('livro/criar/', views.criar_livro, name='criar_livro'),
+    path('livro/<int:livro_id>/excluir/', views.excluir_livro, name='excluir_livro'),
+    path('evidencias/', views.arquivo_evidencias, name='arquivo_evidencias'),
+    path('evidencias/exportar/', views.exportar_anotacoes, name='exportar_anotacoes'),
+    path('evidencias/<int:export_id>/importar/', views.importar_anotacoes, name='importar_anotacoes'),
 
     #A partir daqui é url do QUADRO
     path('livro/<int:livro_id>/quadro/', views.quadro, name='quadro'),

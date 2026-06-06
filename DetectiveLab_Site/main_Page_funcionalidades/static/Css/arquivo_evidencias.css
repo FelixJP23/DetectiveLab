@@ -1,0 +1,93 @@
+/* ===========================================================
+   DetectiveLab - Arquivo de Evidencias
+   Arquivo: main_Page_funcionalidades/static/Css/arquivo_evidencias.css
+   =========================================================== */
+
+body {
+  background-color: #121414;
+  background-image: radial-gradient(circle at 50% 0%, #1e2020 0%, #121414 70%);
+  color: #e2e2e2;
+}
+
+/* Painel de vidro (cards e busca) */
+.glass-panel {
+  background: rgba(30, 32, 32, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(171, 137, 133, 0.2);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+}
+.glass-panel:hover {
+  border-color: rgba(255, 179, 172, 0.5);
+  box-shadow: 0 0 15px rgba(186, 26, 32, 0.1), inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* Input da busca */
+.text-input-noir {
+  background: transparent;
+  border: none;
+  color: #e2e2e2;
+}
+.text-input-noir:focus { outline: none; box-shadow: none; }
+
+.logout-form button { background: none; border: none; cursor: pointer; padding: 0; font-family: 'Archivo Narrow', sans-serif; }
+
+/* ---------- MODAIS ---------- */
+.ev-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: rgba(18, 20, 20, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.ev-modal.open { opacity: 1; pointer-events: auto; }
+
+.ev-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  padding: 36px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: translateY(20px) scale(0.98);
+  transition: transform 0.3s ease;
+}
+.ev-modal.open .ev-modal-card { transform: translateY(0) scale(1); }
+
+.glass-strong {
+  background: rgba(20, 22, 22, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(171, 137, 133, 0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* ---------- TOAST ---------- */
+.ev-toast {
+  position: fixed;
+  top: 90px;
+  right: 24px;
+  background: #1e2020;
+  border-left: 4px solid #ffb3ac;
+  color: #e2e2e2;
+  padding: 14px 22px;
+  font-family: 'Archivo Narrow', sans-serif;
+  font-size: 14px;
+  z-index: 200;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  max-width: 360px;
+}
+.ev-toast.show { opacity: 1; transform: translateX(0); }
+.ev-toast.erro { border-left-color: #ba1a20; }
