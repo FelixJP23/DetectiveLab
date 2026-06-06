@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required 
 from django.views.decorators.http import require_POST
-from .models import Livro
+from .models import Livro, Capitulo, Card, Conexao, Subtitulo
+from django.http import JsonResponse
+import json
+import pytesseract
+from PIL import Image, ImageOps
 
 @login_required
 def main_page(request):
@@ -23,10 +27,21 @@ def main_page(request):
 def biblioteca(request):
     todos = list(Livro.objects.filter(usuario=request.user).order_by('id'))
 
-    livros_com_numero = [
-        (i + 1, livro)
-        for i, livro in enumerate(todos)
-    ]
+    livros_com_numero = []
+    for i, livro in enumerate(todos):
+      
+        capitulos_com_nota = (
+            livro.capitulos
+            .filter(cards__isnull=False)
+            .distinct()
+            .order_by('numero')
+            .values_list('numero', flat=True)
+        )
+        livros_com_numero.append({
+            'numero': i + 1,
+            'livro': livro,
+            'capitulos': list(capitulos_com_nota),   # ex: [1, 2]
+        })
 
     return render(request, 'biblioteca.html', {
         'livros_com_numero': livros_com_numero
@@ -69,7 +84,133 @@ def criar_livro(request):
         titulo=titulo,
         descricao=descricao,
         status=status,
-        capa=capa,             # pode ser None se nao foi enviada
+        capa=capa,         
     )
 
     return redirect('biblioteca')
+@login_required
+def quadro(request, livro_id, numero=1):
+    livro = get_object_or_404(Livro, pk=livro_id, usuario=request.user)
+
+  
+    capitulo, _ = Capitulo.objects.get_or_create(livro=livro, numero=numero)
+
+    capitulos = livro.capitulos.all()
+    cards     = capitulo.cards.all()
+    conexoes  = capitulo.conexoes.all()
+
+    return render(request, 'quadro.html', {
+        'livro': livro,
+        'capitulo': capitulo,
+        'capitulos': capitulos,
+        'cards': cards,
+        'conexoes': conexoes,
+    })
+
+
+@login_required
+@require_POST
+def salvar_quadro(request, capitulo_id):
+    capitulo = get_object_or_404(Capitulo, pk=capitulo_id, livro__usuario=request.user)
+    dados = json.loads(request.body)
+
+    cards_enviados = dados.get('cards', [])
+    id_map = {}
+    ids_que_continuam = []
+
+    for c in cards_enviados:
+        front_id = str(c.get('id'))
+        titulo    = c.get('titulo', '')
+        descricao = c.get('descricao', '')
+        x = int(c.get('x', 100))
+        y = int(c.get('y', 100))
+        subtitulos = c.get('subtitulos', [])   
+
+        if front_id.lstrip('-').isdigit() and int(front_id) > 0:
+            card = Card.objects.filter(pk=int(front_id), capitulo=capitulo).first()
+            if card:
+                card.titulo = titulo
+                card.descricao = descricao
+                card.pos_x = x
+                card.pos_y = y
+                card.save()
+                id_map[front_id] = card
+                ids_que_continuam.append(card.id)
+        else:
+            card = Card.objects.create(
+                capitulo=capitulo, titulo=titulo, descricao=descricao, pos_x=x, pos_y=y
+            )
+            id_map[front_id] = card
+            ids_que_continuam.append(card.id)
+
+        
+        if front_id in id_map:
+            card_obj = id_map[front_id]
+            card_obj.subtitulos.all().delete()
+            for i, s in enumerate(subtitulos):
+                Subtitulo.objects.create(
+                    card=card_obj,
+                    titulo=s.get('titulo', ''),
+                    conteudo=s.get('conteudo', ''),
+                    ordem=i,
+                )
+
+    capitulo.cards.exclude(id__in=ids_que_continuam).delete()
+
+    capitulo.conexoes.all().delete()
+    for con in dados.get('conexoes', []):
+        origem  = id_map.get(str(con.get('origem')))
+        destino = id_map.get(str(con.get('destino')))
+        if origem and destino:
+            Conexao.objects.create(capitulo=capitulo, origem=origem, destino=destino)
+
+    return JsonResponse({'ok': True})
+
+
+@login_required
+@require_POST
+def novo_capitulo(request, livro_id):
+    livro = get_object_or_404(Livro, pk=livro_id, usuario=request.user)
+    ultimo = livro.capitulos.order_by('-numero').first()
+    proximo = (ultimo.numero + 1) if ultimo else 1
+    Capitulo.objects.create(livro=livro, numero=proximo)
+    return redirect('quadro', livro_id=livro.id, numero=proximo)
+
+
+@login_required
+@require_POST
+def importar_ocr(request, capitulo_id):
+    capitulo = get_object_or_404(Capitulo, pk=capitulo_id, livro__usuario=request.user)
+    imagem = request.FILES.get('imagem')
+    if not imagem:
+        return JsonResponse({'ok': False, 'erro': 'Nenhuma imagem enviada'}, status=400)
+
+    try:
+        dados_imagem = imagem.read()
+        imagem.seek(0)
+        from io import BytesIO
+        img = Image.open(BytesIO(dados_imagem))
+        img = ImageOps.exif_transpose(img)
+        proc = ImageOps.autocontrast(ImageOps.grayscale(img))
+        texto = pytesseract.image_to_string(proc, lang='por+eng+jpn')
+    except Exception as e:
+        return JsonResponse({'ok': False, 'erro': str(e)}, status=500)
+
+    linhas = [l.strip() for l in texto.splitlines() if l.strip()]
+    if not linhas:
+        return JsonResponse({'ok': False, 'erro': 'Nenhum texto reconhecido na imagem'}, status=200)
+
+    card = Card.objects.create(
+        capitulo=capitulo, titulo='Diagrama Importado',
+        imagem=imagem, pos_x=120, pos_y=120,
+    )
+    # Um subtitulo por linha reconhecida
+    for i, linha in enumerate(linhas):
+        Subtitulo.objects.create(card=card, titulo=linha, ordem=i)
+
+    return JsonResponse({
+        'ok': True,
+        'linhas': linhas,
+        'card_id': card.id,
+        'imagem_url': card.imagem.url,
+    })

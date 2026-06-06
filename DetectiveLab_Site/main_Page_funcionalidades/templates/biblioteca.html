@@ -59,7 +59,7 @@
 
 <body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col nocturnal-bg">
 
- 
+
   <header class="bg-background/95 backdrop-blur-md sticky top-0 z-40 border-b border-surface-container-highest">
     <div class="flex justify-between items-center w-full px-10 py-4 max-w-[container-max-width] mx-auto">
 
@@ -107,7 +107,7 @@
       <span class="material-symbols-outlined text-primary/20 text-6xl absolute -top-8 left-1/2 -translate-x-1/2 select-none">format_quote</span>
       <blockquote class="relative z-10">
         <p class="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface italic mb-4 leading-tight">
-          "Nao ha nada de misterioso neste mundo, Sekiguchi"
+          "Não ha nada de misterioso neste mundo, Sekiguchi"
         </p>
         <footer class="font-label-sm text-label-sm text-primary tracking-widest uppercase flex items-center justify-center gap-2">
           <span class="w-8 h-[1px] bg-primary/50"></span>
@@ -140,7 +140,8 @@
     <section class="w-full">
       <div id="cards-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-        {% for numero, livro in livros_com_numero %}
+        {% for item in livros_com_numero %}
+          {% with livro=item.livro numero=item.numero %}
 
           <article class="evidence-card bg-surface-container/80 border border-surface-variant p-2
                           flex flex-col gap-2 group backdrop-blur-sm relative cursor-pointer"
@@ -149,6 +150,7 @@
                    data-descricao="{{ livro.descricao }}"
                    data-status="{{ livro.status }}"
                    data-numero="{{ numero }}"
+                   data-capitulos="{{ item.capitulos|join:',' }}"
                    {% if livro.capa %}data-capa="{{ livro.capa.url }}"{% endif %}>
 
             <div class="relative w-full aspect-square bg-surface-container-lowest overflow-hidden border border-surface-container-highest">
@@ -184,11 +186,12 @@
             </div>
           </article>
 
+          {% endwith %}
         {% empty %}
           <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
             <span class="material-symbols-outlined text-6xl text-surface-container-highest mb-6">menu_book</span>
             <p class="text-on-surface-variant font-body-md italic max-w-sm">
-              Sua biblioteca esta vazia. Adicione seu primeiro caso para comecar a investigação.
+              Sua biblioteca esta vazia. Adicione seu primeiro caso para comecar a investigacao.
             </p>
           </div>
         {% endfor %}
@@ -203,7 +206,7 @@
 
   </main>
 
- 
+
   <footer class="bg-surface-container-lowest border-t border-surface-container-highest relative z-20">
     <div class="flex flex-col md:flex-row justify-between items-center w-full px-10 py-12 gap-gutter max-w-[container-max-width] mx-auto">
       <div class="font-headline-lg text-headline-lg text-on-surface">DETECTIVELAB</div>
@@ -236,7 +239,7 @@
 
       <div class="flex flex-col md:flex-row gap-8">
 
-       
+      
         <div class="w-full md:w-1/3">
           <label for="add-capa"
                  class="flex items-center justify-center
@@ -261,7 +264,7 @@
           </label>
         </div>
 
-  
+     
         <div class="w-full md:w-2/3 space-y-8">
 
           <div class="space-y-6">
@@ -279,10 +282,10 @@
             </div>
           </div>
 
-          <!-- Estado de resolucao -->
+        
           <div class="space-y-4">
             <p class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">
-              ESTADO DE RESOLUCAO
+              ESTADO DE RESOLUÇÃO
             </p>
             <div class="flex flex-wrap gap-4">
 
@@ -319,7 +322,7 @@
             </div>
           </div>
 
-          <!-- Botoes -->
+    
           <div class="flex justify-end gap-4 pt-8 border-t border-outline-variant/20">
             <button type="button" id="add-cancel" class="btn-secondary-add rounded-md">Cancelar</button>
             <button type="submit" class="btn-primary-add rounded-md flex items-center gap-2">
@@ -333,7 +336,7 @@
     </form>
   </div>
 
-  
+ 
   <div id="case-modal" class="case-modal" aria-hidden="true">
     <form id="case-form" method="post" action="" class="case-modal-card">
       {% csrf_token %}
@@ -344,7 +347,7 @@
         <span class="material-symbols-outlined text-[32px]">close</span>
       </button>
 
-     
+    
       <div class="w-full md:w-5/12 h-64 md:h-auto relative border-b md:border-b-0 md:border-r border-surface-container-highest bg-surface-container-lowest">
         <div id="case-cover" class="absolute inset-0 bg-cover bg-center"></div>
         <div id="case-cover-placeholder" class="absolute inset-0 flex items-center justify-center">
@@ -357,16 +360,16 @@
       <div class="w-full md:w-7/12 p-margin flex flex-col justify-between max-h-[90vh] overflow-y-auto">
 
         <div>
-         
+     
           <div class="flex items-center gap-2 text-primary font-label-sm text-label-sm uppercase tracking-widest mb-4">
             <span class="material-symbols-outlined text-[16px]">folder_open</span>
             <span>Caso #<span id="case-numero">000</span></span>
           </div>
 
-   
+         
           <h2 id="case-titulo" class="font-headline-xl text-headline-xl text-on-surface mb-6 md:mb-8">Titulo</h2>
 
-     
+         
           <div class="mb-8">
             <h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-4">Estado de Resolucao</h3>
             <div class="flex gap-2 flex-wrap">
@@ -388,10 +391,10 @@
             </div>
           </div>
 
-         
+       
           <div class="mb-8">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Descricao</h3>
+              <h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">DESCRIÇÃO</h3>
               <button type="button" id="case-edit-btn"
                       class="text-primary hover:text-inverse-primary transition-colors flex items-center gap-1 font-label-sm text-label-sm uppercase tracking-widest">
                 <span class="material-symbols-outlined text-[16px]">edit</span>
@@ -409,20 +412,25 @@
           <div class="mb-8">
             <h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2 flex items-center gap-2">
               <span class="material-symbols-outlined text-[16px]">edit_note</span>
-              Anotacoes do Detetive
+              Anotações do Detetive
             </h3>
-            <p class="text-on-surface-variant/70 italic font-body-md">
+
+      
+            <div id="case-chapters" class="flex flex-col gap-1"></div>
+
+      
+            <p id="case-chapters-empty" class="text-on-surface-variant/70 italic font-body-md">
               Voce nao tem nenhuma anotacao nesse caso, detetive.
             </p>
           </div>
         </div>
 
-
+    
         <div class="mt-auto pt-4 border-t border-surface-container-highest flex flex-col-reverse md:flex-row justify-end gap-3">
           <button type="button"
                   class="border border-primary text-primary font-label-sm text-label-sm uppercase tracking-widest
                          px-8 py-4 hover:bg-primary/10 transition-all duration-300 flex items-center justify-center gap-2">
-            <span>Fazer anotacoes</span>
+            <span>Fazer anotações</span>
             <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
           <button type="submit"
@@ -430,7 +438,7 @@
                          px-8 py-4 glow-effect hover:bg-inverse-primary transition-all duration-300
                          flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-[18px]">check_circle</span>
-            <span>Fechar Dossie</span>
+            <span>Fechar Dossiê</span>
           </button>
         </div>
       </div>
@@ -440,7 +448,7 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // ============== BUSCA ==============
+    
       const filterInput = document.getElementById('case-filter');
       const cards       = document.querySelectorAll('.evidence-card');
       const grid        = document.getElementById('cards-grid');
@@ -468,7 +476,7 @@
         });
       }
 
-     
+
       const modal           = document.getElementById('case-modal');
       const form            = document.getElementById('case-form');
       const closeBtn        = document.getElementById('case-close');
@@ -484,19 +492,19 @@
       const coverPlaceholder= document.getElementById('case-cover-placeholder');
 
       function openModal(card) {
-        // Popula campos
+  
         tituloEl.textContent = card.dataset.title || '';
         numeroEl.textContent = card.dataset.numero || '';
         const desc = card.dataset.descricao || '';
         descDisplay.textContent = desc;
         descEdit.value = desc;
 
-        
+      
         descDisplay.classList.remove('hidden');
         descEdit.classList.add('hidden');
         editLabel.textContent = 'Editar';
 
-       
+      
         if (card.dataset.capa) {
           coverEl.style.backgroundImage = `url('${card.dataset.capa}')`;
           coverPlaceholder.classList.add('hidden');
@@ -505,15 +513,42 @@
           coverPlaceholder.classList.remove('hidden');
         }
 
-       
+     
         const st = card.dataset.status || 'aberto';
         statusInput.value = st;
         statusBtns.forEach(b => b.classList.toggle('selected', b.dataset.status === st));
 
-        
+       
         form.action = '/inicio/livro/' + card.dataset.livroId + '/editar/';
 
-       
+     
+        const notesBtn = document.getElementById('case-notes-btn');
+        if (notesBtn) {
+          notesBtn.href = '/inicio/livro/' + card.dataset.livroId + '/quadro/';
+        }
+
+  
+        const chaptersWrap = document.getElementById('case-chapters');
+        const chaptersEmpty = document.getElementById('case-chapters-empty');
+        const livroId = card.dataset.livroId;
+        const capStr = (card.dataset.capitulos || '').trim();
+        const caps = capStr ? capStr.split(',').filter(n => n !== '') : [];
+
+        chaptersWrap.innerHTML = '';
+        if (caps.length > 0) {
+          chaptersEmpty.style.display = 'none';
+          caps.forEach(num => {
+            const a = document.createElement('a');
+            a.href = '/inicio/livro/' + livroId + '/quadro/' + num + '/';
+            a.className = 'flex items-center gap-2 text-on-surface hover:text-primary transition-colors py-1 font-body-md';
+            a.innerHTML = '<span class="material-symbols-outlined text-[16px]">description</span>Capitulo ' + num;
+            chaptersWrap.appendChild(a);
+          });
+        } else {
+          chaptersEmpty.style.display = '';
+        }
+
+        
         modal.classList.add('open');
         document.body.classList.add('no-scroll');
       }
@@ -526,13 +561,13 @@
       
       cards.forEach(card => {
         card.addEventListener('click', (e) => {
-         
+          
           if (e.target.closest('.delete-btn')) return;
           openModal(card);
         });
       });
 
-    
+      
       closeBtn.addEventListener('click', closeModal);
       modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
@@ -545,17 +580,17 @@
         }
       });
 
-   
+      
       editBtn.addEventListener('click', () => {
         const editando = !descEdit.classList.contains('hidden');
         if (editando) {
-          
+         
           descDisplay.textContent = descEdit.value;
           descDisplay.classList.remove('hidden');
           descEdit.classList.add('hidden');
           editLabel.textContent = 'Editar';
         } else {
-       
+         
           descDisplay.classList.add('hidden');
           descEdit.classList.remove('hidden');
           descEdit.focus();
@@ -563,7 +598,7 @@
         }
       });
 
-   
+     
       statusBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           statusBtns.forEach(b => b.classList.remove('selected'));
@@ -572,9 +607,9 @@
         });
       });
 
-  
+      
       form.addEventListener('submit', () => {
-    
+        
         if (descEdit.classList.contains('hidden')) {
           descEdit.classList.remove('hidden');
           descEdit.style.position = 'absolute';
@@ -604,12 +639,12 @@
       if (addClose)   addClose.addEventListener('click', closeAddModal);
       if (addCancel)  addCancel.addEventListener('click', closeAddModal);
 
-     
+      
       addModal.addEventListener('click', (e) => {
         if (e.target === addModal) closeAddModal();
       });
 
-  
+     
       if (addCapaInput) {
         addCapaInput.addEventListener('change', (e) => {
           const file = e.target.files && e.target.files[0];
@@ -620,6 +655,7 @@
         });
       }
 
+     
       document.querySelectorAll('a[href]').forEach(link => {
         link.addEventListener('click', (e) => {
           const href = link.getAttribute('href');

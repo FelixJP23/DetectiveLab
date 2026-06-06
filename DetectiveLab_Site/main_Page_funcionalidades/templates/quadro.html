@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Quadro de Investigação - {{ livro.titulo }}</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'Css/quadro.css' %}">
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: { extend: {
+        colors: {
+          "background": "#121414", "on-background": "#e2e2e2",
+          "surface": "#121414", "surface-dim": "#121414",
+          "surface-container": "#1e2020", "surface-container-low": "#1a1c1c",
+          "surface-container-lowest": "#0d0e0f", "surface-container-high": "#282a2b",
+          "surface-container-highest": "#333535", "surface-variant": "#333535",
+          "on-surface": "#e2e2e2", "on-surface-variant": "#e4beba",
+          "outline": "#ab8985", "outline-variant": "#5b403d",
+          "primary": "#ffb3ac", "primary-container": "#d32f2f",
+          "on-primary": "#680008", "inverse-primary": "#ba1a20"
+        },
+        spacing: { "unit": "8px", "margin": "40px", "gutter": "24px", "container-max-width": "1200px" },
+        fontFamily: {
+          "headline-lg": ["Playfair Display"], "headline-xl": ["Playfair Display"],
+          "headline-lg-mobile": ["Playfair Display"],
+          "body-md": ["Archivo Narrow"], "label-sm": ["Archivo Narrow"]
+        },
+        fontSize: {
+          "label-sm": ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "600" }],
+          "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+          "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+          "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+          "headline-xl": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }]
+        }
+      }}
+    }
+  </script>
+</head>
+
+<body class="bg-background text-on-background h-screen overflow-hidden flex flex-col font-body-md"
+      data-capitulo-id="{{ capitulo.id }}"
+      data-save-url="/inicio/capitulo/{{ capitulo.id }}/salvar/"
+      data-ocr-url="/inicio/capitulo/{{ capitulo.id }}/ocr/">
+
+  {% csrf_token %}
+
+
+  <header class="flex justify-between items-center w-full px-margin py-unit bg-surface-container border-b border-outline-variant text-primary z-50 relative">
+    <div class="flex items-center gap-gutter">
+      <h1 class="text-headline-lg font-headline-lg uppercase tracking-tighter text-primary">DEDUÇÕES</h1>
+      <div class="h-6 w-px bg-outline-variant"></div>
+      <span class="text-label-sm font-label-sm text-on-surface-variant">QUADRO DE INVESTIGAÇÃO &mdash; {{ livro.titulo }}</span>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <a href="{% url 'biblioteca' %}"
+         class="text-on-surface-variant hover:text-primary px-4 py-2 font-label-sm text-label-sm uppercase transition-colors duration-300 flex items-center gap-2">
+        <span class="material-symbols-outlined" style="font-size:18px;">library_books</span>
+        Voltar a Biblioteca
+      </a>
+
+     
+      <button id="btn-ocr" type="button"
+              class="bg-primary text-on-primary px-4 py-2 font-label-sm text-label-sm uppercase hover:bg-primary/90 transition-colors duration-300 flex items-center gap-2">
+        <span class="material-symbols-outlined" style="font-size:18px;">map</span>
+        Importar Diagrama do Crime
+      </button>
+      <input id="ocr-input" type="file" accept="image/*" class="hidden">
+
+     
+      <button id="btn-novo-card" type="button"
+              class="border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary px-4 py-2 font-label-sm text-label-sm uppercase transition-colors duration-300 flex items-center gap-2">
+        <span class="material-symbols-outlined" style="font-size:18px;">note_add</span>
+        Criar Anotacao
+      </button>
+
+    
+      <button id="btn-salvar" type="button"
+              class="bg-primary-container text-white px-4 py-2 font-label-sm text-label-sm uppercase hover:bg-inverse-primary transition-colors duration-300 flex items-center gap-2 shadow-[0_0_15px_rgba(211,47,47,0.3)]">
+        <span class="material-symbols-outlined" style="font-size:18px;">save</span>
+        Salvar
+      </button>
+    </div>
+  </header>
+
+  <div class="flex flex-1 overflow-hidden relative">
+
+
+    <nav class="hidden md:flex flex-col h-full border-r border-outline-variant bg-surface-container-lowest w-64 z-40 relative">
+      <div class="p-6 border-b border-outline-variant">
+        <h2 class="text-headline-lg-mobile font-headline-lg-mobile text-primary">Estudo do caso</h2>
+        <p class="text-label-sm font-label-sm text-on-surface-variant mt-2">{{ livro.titulo }}</p>
+      </div>
+
+      <div class="flex-1 overflow-y-auto py-4">
+        <div class="px-4 mb-2">
+          <span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-widest">Capitulos</span>
+        </div>
+        <ul class="space-y-1">
+          {% for cap in capitulos %}
+            <li>
+              <a href="{% url 'quadro' livro.id cap.numero %}"
+                 class="flex items-center gap-3 px-4 py-3 transition-all
+                        {% if cap.id == capitulo.id %}text-primary bg-primary/5 border-l-4 border-primary font-bold{% else %}text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/20{% endif %}">
+                <span class="text-body-md font-body-md">Capitulo {{ cap.numero }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+
+        <div class="px-4 mt-6">
+          <form method="post" action="{% url 'novo_capitulo' livro.id %}">
+            {% csrf_token %}
+            <button type="submit"
+                    class="w-full border border-primary text-primary px-4 py-2 font-label-sm text-label-sm uppercase hover:bg-primary/10 transition-colors duration-300 flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined" style="font-size:16px;">add</span>
+              Novo Capitulo
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+
+    <main class="flex-1 relative overflow-auto corkboard-bg" id="board-container">
+    
+      <div id="board" class="relative" style="width: 2000px; height: 1500px;">
+
+        
+        <svg id="threads" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index:0;"></svg>
+
+       
+        {% for card in cards %}
+          {% if card.imagem %}
+     
+            <div class="note-card note-card-img" data-card-id="{{ card.id }}"
+                 data-x="{{ card.pos_x }}" data-y="{{ card.pos_y }}">
+              <div class="pin" data-card-id="{{ card.id }}"></div>
+              <img class="note-img" src="{{ card.imagem.url }}" alt="Diagrama importado">
+              <div class="note-head">
+                <input class="note-title" value="{{ card.titulo }}" placeholder="TITULO">
+              </div>
+              <div class="note-subtitles">
+                {% for sub in card.subtitulos.all %}
+                  <div class="sub-block">
+                    <input class="note-subtitle-edit" value="{{ sub.titulo }}">
+                    <textarea class="note-body" placeholder="Escreva sobre este item...">{{ sub.conteudo }}</textarea>
+                  </div>
+                {% endfor %}
+              </div>
+              <button class="note-delete" type="button" title="Remover card">
+                <span class="material-symbols-outlined" style="font-size:16px;">close</span>
+              </button>
+            </div>
+          {% else %}
+            <!-- Card comum -->
+            <div class="note-card" data-card-id="{{ card.id }}"
+                 data-x="{{ card.pos_x }}" data-y="{{ card.pos_y }}">
+              <div class="pin" data-card-id="{{ card.id }}"></div>
+              <div class="note-head">
+                <input class="note-title" value="{{ card.titulo }}" placeholder="TITULO">
+              </div>
+              <textarea class="note-body" placeholder="Escreva sua anotacao...">{{ card.descricao }}</textarea>
+              <button class="note-delete" type="button" title="Remover card">
+                <span class="material-symbols-outlined" style="font-size:16px;">close</span>
+              </button>
+            </div>
+          {% endif %}
+        {% endfor %}
+
+      </div>
+    </main>
+  </div>
+
+  
+  <script id="conexoes-data" type="application/json">
+    [
+      {% for con in conexoes %}
+        {"origem": {{ con.origem_id }}, "destino": {{ con.destino_id }}}{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ]
+  </script>
+
+  <script src="{% static 'Css/quadro.js' %}"></script>
+</body>
+</html>
