@@ -10,11 +10,13 @@ urlpatterns = [
     path('evidencias/', views.arquivo_evidencias, name='arquivo_evidencias'),
     path('evidencias/exportar/', views.exportar_anotacoes, name='exportar_anotacoes'),
     path('evidencias/<int:export_id>/importar/', views.importar_anotacoes, name='importar_anotacoes'),
-
+    path('mural/', views.mural_casos, name='mural_casos'),
+    
     #A partir daqui é url do QUADRO
     path('livro/<int:livro_id>/quadro/', views.quadro, name='quadro'),
     path('livro/<int:livro_id>/quadro/<int:numero>/', views.quadro, name='quadro'),
     path('capitulo/<int:capitulo_id>/salvar/', views.salvar_quadro, name='salvar_quadro'),
     path('livro/<int:livro_id>/novo-capitulo/', views.novo_capitulo, name='novo_capitulo'),
     path('capitulo/<int:capitulo_id>/ocr/', views.importar_ocr, name='importar_ocr'),
+    
 ]

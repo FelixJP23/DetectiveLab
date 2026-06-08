@@ -130,11 +130,10 @@
     
       <nav class="hidden md:flex gap-8 items-center">
         <a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm uppercase tracking-widest hover:text-primary transition-all duration-300"
-           href="#">Ver Arquivos</a>
+           href="#">Home</a>
         <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest"
           href="{% url 'biblioteca' %}">Biblioteca</a>
-        <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest"
-           href="#">Comunidade</a>
+        
       </nav>
 
   
@@ -210,36 +209,34 @@
               Arquivo de Evidências
             </h3>
             <p class="text-on-surface-variant max-w-sm">
-              Analise dados brutos, escrutine documentos e junte depoimentos fragmentados
-              em seu cofre digital seguro.
+              Precisa de ajuda? Procure e contribua no banco de conhecimento dos seus colegas de profissão. A verdade pode estar a uma busca de distância.
             </p>
           </div>
           <div class="flex items-center gap-2 text-primary font-label-sm text-label-sm uppercase
                       tracking-widest mt-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Acessar Cofre
+            Acessar banco de evidências
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </div>
         </a>
 
        
         <a class="glass-card group block p-10 h-[300px] flex flex-col justify-between relative overflow-hidden"
-           href="#">
+           href="{% url 'mural_casos' %}">
           <div class="absolute bottom-0 left-0 w-32 h-32 bg-primary-container/5 rounded-full blur-3xl
                       group-hover:bg-primary-container/20 transition-all duration-700"></div>
           <div>
             <span class="material-symbols-outlined text-4xl text-primary mb-4"
                   style="font-variation-settings: 'FILL' 1;">hub</span>
             <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">
-              Mural de Casos
+              Estudo da arte
             </h3>
             <p class="text-on-surface-variant max-w-sm">
-              Mapeie relacionamentos, estabeleça cronogramas e desenhe a linha vermelha
-              entre suspeitos em uma visualização interativa.
+              Aquele que deseja entender o presente deve consultar o passado. Aprenda com os antigos mestres e suas obras quanto a arte do mistério.
             </p>
           </div>
           <div class="flex items-center gap-2 text-primary font-label-sm text-label-sm uppercase
                       tracking-widest mt-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Ver Mural
+            Estudar mestres
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </div>
         </a>
@@ -338,16 +335,7 @@
         DETECTIVELAB
       </div>
 
-      <nav class="flex flex-wrap justify-center gap-6 font-label-sm text-label-sm uppercase tracking-wider">
-        <a class="text-on-surface-variant hover:text-on-surface underline decoration-primary
-                  decoration-2 underline-offset-4 transition-all" href="#">Arquivos</a>
-        <a class="text-on-surface-variant hover:text-on-surface underline decoration-primary
-                  decoration-2 underline-offset-4 transition-all" href="{% url 'arquivo_evidencias'%}">Arquivo de Evidências</a>
-        <a class="text-on-surface-variant hover:text-on-surface underline decoration-primary
-                  decoration-2 underline-offset-4 transition-all" href="#">Política de Privacidade</a>
-        <a class="text-on-surface-variant hover:text-on-surface underline decoration-primary
-                  decoration-2 underline-offset-4 transition-all" href="#">Contatar Agência</a>
-      </nav>
+     
 
       <div class="font-label-sm text-label-sm uppercase tracking-wider text-primary mt-6 md:mt-0 text-center md:text-right">
         © 1841–2026 DETECTIVELAB. TODAS AS PISTAS RESERVADAS.

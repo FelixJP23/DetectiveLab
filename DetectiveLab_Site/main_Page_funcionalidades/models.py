@@ -88,3 +88,36 @@ class AnotacaoCompartilhada(models.Model):
 
     class Meta:
         ordering = ['-criado_em']
+
+class Autor(models.Model):
+    TRADICAO_CHOICES = [
+        ('americana', 'Americana'),
+        ('japonesa', 'Japonesa'),
+    ]
+    nome      = models.CharField(max_length=200)
+    tradicao  = models.CharField(max_length=20, choices=TRADICAO_CHOICES)
+    biografia = models.TextField()
+    foto      = models.ImageField(upload_to='autores/', blank=True, null=True)
+    ordem     = models.PositiveIntegerField(default=0)  
+
+    class Meta:
+        ordering = ['ordem', 'nome']
+
+    def __str__(self):
+        return self.nome
+
+
+class Obra(models.Model):
+    autor     = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='obras')
+    titulo    = models.CharField(max_length=200)
+    ano       = models.CharField(max_length=20, blank=True)   
+    capa      = models.ImageField(upload_to='obras_capas/', blank=True, null=True)
+    ordem     = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['ordem', 'id']
+
+    def __str__(self):
+        return self.titulo
+    
+    

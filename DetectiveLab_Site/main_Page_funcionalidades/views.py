@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required 
 from django.views.decorators.http import require_POST
-from .models import Livro, Capitulo, Card, Conexao, Subtitulo, AnotacaoCompartilhada
+from .models import Livro, Capitulo, Card, Conexao, Subtitulo, AnotacaoCompartilhada, Autor
 from django.http import JsonResponse
 import json
 import pytesseract
@@ -356,3 +356,29 @@ def importar_anotacoes(request, export_id):
   
     aplicar_snapshot(livro_destino, export.snapshot)
     return JsonResponse({'ok': True})
+
+
+@login_required
+def mural_casos(request):
+    autores = Autor.objects.prefetch_related('obras').all()
+
+ 
+    autores_json = []
+    for a in autores:
+        autores_json.append({
+            'id': a.id,
+            'nome': a.nome,
+            'tradicao': a.tradicao,
+            'biografia': a.biografia,
+            'foto': a.foto.url if a.foto else '',
+            'obras': [
+                {'titulo': o.titulo, 'ano': o.ano, 'capa': o.capa.url if o.capa else ''}
+                for o in a.obras.all()
+            ],
+        })
+
+    return render(request, 'mural_casos.html', {
+        'americanos': [a for a in autores if a.tradicao == 'americana'],
+        'japoneses':  [a for a in autores if a.tradicao == 'japonesa'],
+        'autores_json': json.dumps(autores_json),
+    })

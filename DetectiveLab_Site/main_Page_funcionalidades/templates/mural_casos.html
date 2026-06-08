@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Mural de Casos - DetectiveLab</title>
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <link rel="stylesheet" href="{% static 'Css/mural_casos.css' %}">
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: { extend: {
+        colors: {
+          "on-primary-fixed-variant":"#930010","surface-container-lowest":"#0d0e0f",
+          "surface-bright":"#38393a","primary-container":"#d32f2f","surface-dim":"#121414",
+          "secondary":"#c8c6c5","surface-container-highest":"#333535","on-primary":"#680008",
+          "primary":"#ffb3ac","inverse-surface":"#e2e2e2","tertiary":"#c9c6c5",
+          "secondary-container":"#474746","on-background":"#e2e2e2","inverse-primary":"#ba1a20",
+          "surface-container":"#1e2020","surface-variant":"#333535","on-surface-variant":"#e4beba",
+          "on-surface":"#e2e2e2","outline":"#ab8985","surface-container-low":"#1a1c1c",
+          "surface-tint":"#ffb3ac","surface":"#121414","surface-container-high":"#282a2b",
+          "background":"#121414","on-primary-container":"#fff2f0","outline-variant":"#5b403d"
+        },
+        spacing: { "unit":"8px","container-max-width":"1200px","margin":"40px","gutter":"24px" },
+        fontFamily: {
+          "headline-xl":["Playfair Display"],"label-sm":["Archivo Narrow"],
+          "headline-lg":["Playfair Display"],"headline-lg-mobile":["Playfair Display"],
+          "body-md":["Archivo Narrow"]
+        },
+        fontSize: {
+          "headline-xl":["80px",{"lineHeight":"1","letterSpacing":"-0.04em","fontWeight":"700"}],
+          "label-sm":["12px",{"lineHeight":"1.0","letterSpacing":"0.15em","fontWeight":"600"}],
+          "headline-lg":["32px",{"lineHeight":"1.2","fontWeight":"700"}],
+          "headline-lg-mobile":["28px",{"lineHeight":"1.2","fontWeight":"700"}],
+          "body-md":["16px",{"lineHeight":"1.8","fontWeight":"400"}]
+        }
+      }}
+    }
+  </script>
+</head>
+
+<body class="bg-surface text-on-surface font-body-md h-screen w-full overflow-hidden flex flex-col md:flex-row selection:bg-primary-container selection:text-on-primary-container"
+      data-autores='{{ autores_json|safe }}'>
+
+  
+  <aside class="w-full md:w-[320px] lg:w-[400px] h-auto md:h-full bg-surface-container-lowest border-b md:border-b-0 md:border-r border-outline-variant flex flex-col flex-shrink-0 z-20">
+    <div class="p-margin border-b border-outline-variant/50">
+      <a href="{% url 'main_page' %}"
+         class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-300 flex items-center gap-2 uppercase tracking-[0.2em] mb-12">
+        <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
+        Voltar ao Inicio
+      </a>
+      <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">MESTRES DO MISTÉRIO</h2>
+      <p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">SELECIONE COM QUEM QUER ESTUDAR </p>
+    </div>
+
+    <!-- Filtro de tradicao -->
+    <div class="px-margin pt-8 pb-4 flex gap-6 border-b border-outline-variant/30">
+      <button type="button" data-tradicao="americana"
+              class="trad-btn font-label-sm text-label-sm text-primary border-b border-primary pb-1 tracking-[0.1em] transition-all">AMERICANA</button>
+      <button type="button" data-tradicao="japonesa"
+              class="trad-btn font-label-sm text-label-sm text-on-surface-variant border-b border-transparent pb-1 hover:text-primary tracking-[0.1em] transition-all">JAPONESA</button>
+    </div>
+
+    <!-- Lista -->
+    <nav class="flex-1 overflow-y-auto p-margin no-scrollbar">
+      <ul id="lista-americana" class="space-y-6">
+        {% for autor in americanos %}
+          <li class="autor-li relative" data-autor-id="{{ autor.id }}">
+            <div class="marcador absolute -left-margin top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r hidden"></div>
+            <button type="button" class="autor-btn block group text-left w-full">
+              <span class="nome font-headline-lg text-[24px] text-on-surface-variant group-hover:text-on-surface transition-colors block leading-tight mb-1">{{ autor.nome }}</span>
+            </button>
+          </li>
+        {% empty %}
+          <li class="text-on-surface-variant/60 italic font-body-md text-sm">Nenhum autor cadastrado nesta tradicao.</li>
+        {% endfor %}
+      </ul>
+
+      <ul id="lista-japonesa" class="space-y-6 hidden">
+        {% for autor in japoneses %}
+          <li class="autor-li relative" data-autor-id="{{ autor.id }}">
+            <div class="marcador absolute -left-margin top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r hidden"></div>
+            <button type="button" class="autor-btn block group text-left w-full">
+              <span class="nome font-headline-lg text-[24px] text-on-surface-variant group-hover:text-on-surface transition-colors block leading-tight mb-1">{{ autor.nome }}</span>
+            </button>
+          </li>
+        {% empty %}
+          <li class="text-on-surface-variant/60 italic font-body-md text-sm">Nenhum autor cadastrado nesta tradicao.</li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </aside>
+
+  
+  <main class="flex-1 relative h-full flex flex-col justify-end overflow-y-auto md:overflow-hidden bg-surface">
+
+  
+    <div class="absolute right-0 top-0 h-full w-full md:w-1/2 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute inset-0 z-10 chiaroscuro-gradient rotate-180 opacity-10"></div>
+      <div class="absolute inset-0 z-10 chiaroscuro-v-gradient opacity-10"></div>
+      <img id="autor-foto" alt="Retrato do autor"
+           class="h-full w-full object-cover object-right mix-blend-luminosity grayscale opacity-100 transition-opacity duration-700" src="">
+    </div>
+
+  
+    <div class="absolute inset-0 z-0 chiaroscuro-gradient hidden md:block"></div>
+    
+
+ 
+    <div class="relative w-full md:w-4/5 lg:w-2/3 p-margin pt-24 md:pt-margin flex flex-col h-full justify-end z-20">
+
+      <div id="conteudo-autor" class="transition-opacity duration-300">
+     
+        <div class="mb-8">
+          <p class="font-label-sm text-label-sm text-primary mb-4 tracking-[0.3em] flex items-center gap-3">
+            <span class="w-8 h-[1px] bg-primary block"></span>
+            <span id="autor-tradicao-label">DOSSIE</span>
+          </p>
+          <h1 id="autor-nome" class="font-headline-xl text-headline-xl text-on-surface uppercase leading-[0.85] tracking-tighter drop-shadow-2xl"></h1>
+        </div>
+
+      
+        <div class="mb-12 max-w-2xl">
+          <p id="autor-bio" class="font-body-md text-body-md text-on-surface-variant opacity-90 leading-[1.8] text-justify md:text-left whitespace-pre-line"></p>
+        </div>
+
+       
+        <div class="w-full">
+          <div class="flex items-center justify-between mb-6 border-b border-outline-variant/30 pb-3">
+            <h3 class="font-label-sm text-label-sm text-on-surface tracking-[0.2em]">PRINCIPAIS OBRAS</h3>
+          </div>
+          <div id="autor-obras" class="flex gap-6 overflow-x-auto pb-4 no-scrollbar"></div>
+        </div>
+      </div>
+
+     
+      <div id="mural-vazio" class="hidden flex-col items-start justify-end h-full pb-12">
+        <span class="material-symbols-outlined text-6xl text-surface-container-highest mb-6">menu_book</span>
+        <p class="text-on-surface-variant italic max-w-md">Nenhum autor foi cadastrado ainda. Volte em breve para explorar os mestres do misterio.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="{% static 'Css/mural_casos.js' %}"></script>
+</body>
+</html>
