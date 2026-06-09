@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Home_funcionalidades',
     'rest_framework',
     'main_Page_funcionalidades',
+     'rest_framework.authtoken', 
 ]
 
 MIDDLEWARE = [
@@ -132,3 +133,14 @@ LOGOUT_REDIRECT_URL = 'home'
 
 AUTHENTICATION_BACKENDS = ['Home_funcionalidades.backends.EmailBackend',
                            'django.contrib.auth.backends.ModelBackend',]
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}

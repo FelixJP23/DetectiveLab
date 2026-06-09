@@ -89,6 +89,7 @@ def criar_livro(request):
         status=status,
         capa=capa,         
     )
+    return redirect('biblioteca')
 
 @login_required
 @require_POST
@@ -96,7 +97,7 @@ def excluir_livro(request, livro_id):
     livro = get_object_or_404(Livro, pk=livro_id, usuario=request.user)
     livro.delete()
     return JsonResponse({'ok': True})
-    return redirect('biblioteca')
+    
 
 
 

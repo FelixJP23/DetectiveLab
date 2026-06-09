@@ -25,6 +25,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Home_funcionalidades.urls')),
     path('inicio/', include('main_Page_funcionalidades.urls')),
+
+    path('api/auth/', include('apis.home_funcionalidades_api.urls')),
+    path('api/', include('apis.main_page_funcionalidades_api.urls')),
 ]
 
 if settings.DEBUG:
