@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar class="auth-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Criar conta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-bg"></div>
+
+  <div class="auth-wrapper">
+    <div class="brand">
+      <h1>NOVO <span class="accent">DETETIVE</span></h1>
+      <p>Registre-se para iniciar suas investigacoes</p>
+    </div>
+
+    <ion-item class="field" lines="none">
+      <ion-label position="stacked">Nome de usuario</ion-label>
+      <ion-input [(ngModel)]="username" autocomplete="username"></ion-input>
+    </ion-item>
+
+    <ion-item class="field" lines="none">
+      <ion-label position="stacked">E-mail</ion-label>
+      <ion-input type="email" [(ngModel)]="email" autocomplete="email"></ion-input>
+    </ion-item>
+
+    <ion-item class="field" lines="none">
+      <ion-label position="stacked">Senha</ion-label>
+      <ion-input type="password" [(ngModel)]="password" autocomplete="new-password"></ion-input>
+    </ion-item>
+
+    <ion-item class="field" lines="none">
+      <ion-label position="stacked">Confirmar senha</ion-label>
+      <ion-input type="password" [(ngModel)]="password2" autocomplete="new-password"></ion-input>
+    </ion-item>
+
+    <ion-text class="erro-msg" *ngIf="erro">{{ erro }}</ion-text>
+
+    <ion-button expand="block" class="btn-registrar" (click)="registrar()" [disabled]="carregando">
+      <ion-spinner *ngIf="carregando" name="crescent"></ion-spinner>
+      <span *ngIf="!carregando">Criar conta</span>
+    </ion-button>
+  </div>
+</ion-content>

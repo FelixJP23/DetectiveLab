@@ -1,0 +1,7 @@
+{
+  "name": "DetectiveLab_Mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

@@ -1,0 +1,267 @@
+
+
+.home-content {
+  --background: var(--dl-bg);
+}
+
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: rgba(18, 20, 20, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--dl-surface);
+}
+.brand-mini {
+  font-family: var(--dl-font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--dl-text);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--dl-red-soft);
+}
+.header-actions ion-icon { font-size: 22px; }
+.header-actions .avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--dl-surface);
+  border: 1px solid var(--dl-surface);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.header-actions .avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.header-actions .avatar ion-icon { font-size: 18px; color: var(--dl-text-variant); }
+.logout-btn {
+  background: none; border: none; padding: 0;
+  color: var(--dl-text-variant); cursor: pointer;
+}
+.logout-btn ion-icon { font-size: 20px; }
+
+
+.greeting {
+  padding: 32px 20px 8px;
+}
+.greeting .eyebrow {
+  font-family: var(--dl-font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 12px;
+  color: var(--dl-text-variant);
+  margin: 0 0 6px;
+}
+.greeting .title {
+  font-family: var(--dl-font-display);
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--dl-text);
+  margin: 0;
+}
+.greeting .title .accent { color: var(--dl-red-soft); }
+
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.section-head.between { justify-content: space-between; }
+.section-head h2 {
+  font-family: var(--dl-font-display);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--dl-text);
+  margin: 0;
+  white-space: nowrap;
+}
+.red-string {
+  flex-grow: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--dl-red) 0%, transparent 100%);
+}
+
+
+.tools { padding: 40px 20px; }
+
+.tool-card {
+  position: relative;
+  overflow: hidden;
+  background: rgba(30, 32, 32, 0.6);
+  border: 1px solid rgba(171, 137, 133, 0.2);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+  padding: 28px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+.tool-card:active { border-color: rgba(255, 179, 172, 0.5); }
+.tool-card .glow {
+  position: absolute;
+  width: 130px; height: 130px;
+  background: rgba(211, 47, 47, 0.08);
+  border-radius: 50%;
+  filter: blur(40px);
+}
+.tool-card .glow-tr { top: 0; right: 0; }
+.tool-card .glow-bl { bottom: 0; left: 0; }
+.tool-icon {
+  font-size: 38px;
+  color: var(--dl-red-soft);
+  margin-bottom: 14px;
+  position: relative;
+}
+.tool-card h3 {
+  font-family: var(--dl-font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--dl-text);
+  margin: 0 0 10px;
+  position: relative;
+}
+.tool-card p {
+  font-family: var(--dl-font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--dl-text-variant);
+  margin: 0 0 18px;
+  position: relative;
+}
+.tool-cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--dl-font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  color: var(--dl-red-soft);
+  position: relative;
+}
+.tool-cta ion-icon { font-size: 16px; }
+
+
+.dossies {
+  padding: 40px 20px 60px;
+  background: var(--dl-surface-low);
+  border-top: 1px solid var(--dl-surface);
+}
+.ver-arquivos {
+  background: none; border: none; padding: 0;
+  font-family: var(--dl-font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  color: var(--dl-red-soft);
+  cursor: pointer;
+}
+
+.dossies-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+.dossie { cursor: pointer; min-width: 0; }   
+.dossie .capa {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--dl-surface);
+  background: var(--dl-surface);
+  margin-bottom: 10px;
+  transition: border-color 0.3s ease;
+}
+.dossie:active .capa { border-color: var(--dl-red-soft); }
+.dossie .capa img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+  transition: filter 0.5s ease;
+}
+.dossie:active .capa img { filter: grayscale(0); }
+.dossie .capa-grad {
+  position: absolute; inset: 0; z-index: 10;
+  background: linear-gradient(to top, var(--dl-bg), transparent 60%);
+}
+.dossie .capa-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.dossie .capa-placeholder ion-icon {
+  font-size: 44px;
+  color: var(--dl-surface);
+}
+.dossie .badge {
+  position: absolute;
+  top: 6px; right: 6px;
+  z-index: 20;
+  padding: 2px 6px;
+  font-family: var(--dl-font-body);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.dossie .badge-aberto { background: var(--dl-red); color: #fff; }
+.dossie .badge-frio {
+  background: var(--dl-surface);
+  color: var(--dl-text-variant);
+  border: 1px solid var(--dl-surface);
+}
+.dossie-titulo {
+  font-family: var(--dl-font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--dl-text);
+  margin: 0 0 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dossie-caso {
+  font-family: var(--dl-font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  color: var(--dl-text-variant);
+  margin: 0;
+}
+
+
+.estado-centro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+}
+.estado-centro.coluna { flex-direction: column; }
+.vazio-icon {
+  font-size: 54px;
+  color: var(--dl-surface);
+  margin-bottom: 18px;
+}
+.vazio-texto {
+  font-family: var(--dl-font-body);
+  font-style: italic;
+  color: var(--dl-text-variant);
+  text-align: center;
+  max-width: 280px;
+  margin: 0;
+}
