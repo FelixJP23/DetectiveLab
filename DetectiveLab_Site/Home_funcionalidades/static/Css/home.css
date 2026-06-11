@@ -239,3 +239,41 @@ html, body {
   .topbar { gap: 28px; }
   .nav { gap: 24px; }
 }
+
+.nav a,
+.logout-form button {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 2px;
+  transition: color 0.25s ease;
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Oswald', sans-serif;
+}
+
+.nav a::after,
+.logout-form button::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -4px;
+  width: 0; height: 2px;
+  background: var(--red);
+  transition: width 0.25s ease;
+}
+
+.nav a:hover,
+.logout-form button:hover { color: var(--red); }
+
+.nav a:hover::after,
+.logout-form button:hover::after { width: 100%; }
+
+.logout-form {
+  display: inline;
+  line-height: 0;
+}

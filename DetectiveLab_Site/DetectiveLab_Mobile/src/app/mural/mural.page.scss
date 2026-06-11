@@ -1,0 +1,167 @@
+
+
+.mural-content { --background: var(--dl-bg); }
+
+/* ---------- HEADER ---------- */
+.app-header {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--dl-surface-lowest);
+  border-bottom: 1px solid var(--dl-outline-variant);
+}
+.icon-btn { background: none; border: none; color: var(--dl-red-soft); cursor: pointer; padding: 0; display: flex; }
+.icon-btn ion-icon { font-size: 24px; }
+.header-titulo { display: flex; flex-direction: column; align-items: center; }
+.titulo-main {
+  font-family: var(--dl-font-display); font-weight: 700; font-size: 16px;
+  color: var(--dl-text); text-transform: uppercase; letter-spacing: 0.02em;
+}
+.titulo-sub {
+  font-family: var(--dl-font-body); font-size: 10px;
+  color: var(--dl-text-variant); text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7;
+}
+
+/* ---------- ABAS DE TRADICAO ---------- */
+.trad-tabs {
+  display: flex; gap: 24px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(91,64,61,0.3);
+  background: var(--dl-surface-lowest);
+}
+.trad-tab {
+  background: none; border: none; cursor: pointer; padding: 0 0 4px;
+  font-family: var(--dl-font-body); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.1em; color: var(--dl-text-variant);
+  border-bottom: 1px solid transparent;
+}
+.trad-tab.ativo { color: var(--dl-red-soft); border-bottom-color: var(--dl-red-soft); }
+
+/* ---------- FAIXA DE AUTORES ---------- */
+.autores-faixa {
+  display: flex; gap: 10px; overflow-x: auto;
+  padding: 14px 20px;
+  background: var(--dl-surface-low);
+  border-bottom: 1px solid var(--dl-surface);
+  scrollbar-width: none;
+}
+.autores-faixa::-webkit-scrollbar { display: none; }
+.autor-chip {
+  flex-shrink: 0;
+  background: transparent; border: 1px solid var(--dl-outline-variant);
+  color: var(--dl-text-variant); cursor: pointer;
+  padding: 8px 14px; white-space: nowrap;
+  font-family: var(--dl-font-display); font-size: 15px;
+  transition: all 0.25s ease;
+}
+.autor-chip.ativo {
+  background: rgba(255,179,172,0.08);
+  border-color: var(--dl-red-soft); color: var(--dl-red-soft);
+}
+.faixa-vazia {
+  font-family: var(--dl-font-body); font-style: italic;
+  color: var(--dl-text-variant); font-size: 13px; margin: 4px 0;
+}
+
+/* ---------- AREA DO AUTOR ---------- */
+.autor-area {
+  position: relative;
+  min-height: 60vh;
+  overflow: hidden;
+}
+
+/* Foto de fundo (z-0, atras de tudo) */
+.autor-bg {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden;
+  pointer-events: none;
+}
+.autor-bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center top;
+  filter: grayscale(1);
+  mix-blend-mode: luminosity;
+  opacity: 0.45;
+  transition: opacity 0.5s ease;
+}
+.autor-bg img.trocando { opacity: 0; }
+/* gradientes para o texto destacar sobre a imagem */
+.bg-grad-v {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(0deg, #121414 0%, rgba(18,20,20,0.85) 30%, rgba(18,20,20,0.2) 100%);
+}
+.bg-grad-h {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(90deg, #121414 0%, rgba(18,20,20,0.6) 50%, rgba(18,20,20,0) 100%);
+}
+
+/* Conteudo (z-10, sempre acima da imagem) */
+.autor-conteudo {
+  position: relative; z-index: 10;
+  padding: 28px 20px 40px;
+  transition: opacity 0.25s ease;
+}
+.autor-conteudo.trocando { opacity: 0; }
+
+.trad-label {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--dl-font-body); font-size: 11px;
+  letter-spacing: 0.25em; color: var(--dl-red-soft);
+  margin: 0 0 12px;
+}
+.trad-bar { width: 28px; height: 1px; background: var(--dl-red-soft); display: block; }
+
+.autor-nome {
+  font-family: var(--dl-font-display); font-weight: 900;
+  font-size: 44px; line-height: 0.9; letter-spacing: -0.02em;
+  color: var(--dl-text); text-transform: uppercase;
+  margin: 0 0 20px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+}
+.autor-bio {
+  font-family: var(--dl-font-body); font-size: 15px; line-height: 1.8;
+  color: var(--dl-text-variant); opacity: 0.92;
+  margin: 0 0 32px; white-space: pre-line; text-align: justify;
+}
+
+/* Obras */
+.obras-titulo {
+  font-family: var(--dl-font-body); font-size: 12px;
+  letter-spacing: 0.2em; color: var(--dl-text);
+  border-bottom: 1px solid rgba(91,64,61,0.3); padding-bottom: 10px; margin: 0 0 16px;
+}
+.obras-faixa {
+  display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px;
+  scrollbar-width: none;
+}
+.obras-faixa::-webkit-scrollbar { display: none; }
+.obra-card { flex-shrink: 0; width: 120px; }
+.obra-thumb {
+  width: 100%; height: 168px;
+  background: var(--dl-surface-high, #282a2b);
+  border: 1px solid rgba(91,64,61,0.5);
+  position: relative; overflow: hidden; margin-bottom: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.obra-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.obra-thumb ion-icon { font-size: 30px; color: var(--dl-outline-variant); }
+.obra-titulo {
+  font-family: var(--dl-font-body); font-size: 11px;
+  color: var(--dl-text); text-transform: uppercase; letter-spacing: 0.05em;
+  margin: 0 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.obra-ano {
+  font-family: var(--dl-font-body); font-size: 10px;
+  color: rgba(228,190,186,0.6); margin: 0;
+}
+.obras-vazio {
+  font-family: var(--dl-font-body); font-style: italic;
+  color: rgba(228,190,186,0.5); font-size: 13px; margin: 0;
+}
+
+/* ---------- ESTADOS ---------- */
+.estado-centro { display: flex; align-items: center; justify-content: center; padding: 60px 20px; }
+.estado-centro.coluna { flex-direction: column; }
+.vazio-icon { font-size: 54px; color: var(--dl-surface); margin-bottom: 18px; }
+.vazio-texto {
+  font-family: var(--dl-font-body); font-style: italic;
+  color: var(--dl-text-variant); text-align: center; max-width: 300px; margin: 0;
+}

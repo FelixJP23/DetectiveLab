@@ -15,8 +15,8 @@ def register(request):
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            login(request,user)
-            return redirect('home') 
+            login(request,user,backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('main_page') 
     
     else:
         form = RegisterForm()

@@ -1,0 +1,99 @@
+<ion-content [fullscreen]="true" class="home-content">
+
+
+  <header class="app-header">
+    <div class="brand-mini">DETECTIVELAB</div>
+    <div class="header-actions">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <div class="avatar">
+        <img *ngIf="fotoUrl" [src]="fotoUrl" alt="perfil">
+        <ion-icon *ngIf="!fotoUrl" name="person-outline"></ion-icon>
+      </div>
+      <button class="logout-btn" (click)="sair()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </button>
+    </div>
+  </header>
+
+  
+  <section class="greeting">
+    <p class="eyebrow">Estavamos te esperando</p>
+    <h1 class="title">Detetive <span class="accent">{{ username }}</span></h1>
+  </section>
+
+
+  <section class="tools">
+    <div class="section-head">
+      <h2>Ferramentas do Oficio</h2>
+      <div class="red-string"></div>
+    </div>
+
+   
+    <div class="tool-card" (click)="irEvidencias()">
+      <div class="glow glow-tr"></div>
+      <ion-icon name="search-circle-outline" class="tool-icon"></ion-icon>
+      <h3>Arquivo de Evidencias</h3>
+      <p>Procure e contribua no banco de conhecimento dos seus colegas. A verdade pode estar a uma busca de distancia.</p>
+      <div class="tool-cta">
+        Acessar banco de evidencias
+        <ion-icon name="arrow-forward"></ion-icon>
+      </div>
+    </div>
+
+   
+    <div class="tool-card" (click)="irMural()">
+      <div class="glow glow-bl"></div>
+      <ion-icon name="git-network-outline" class="tool-icon"></ion-icon>
+      <h3>Estudo da Arte</h3>
+      <p>Aquele que deseja entender o presente deve consultar o passado. Aprenda com os antigos mestres e suas obras.</p>
+      <div class="tool-cta">
+        Estudar mestres
+        <ion-icon name="arrow-forward"></ion-icon>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dossies Ativos -->
+  <section class="dossies">
+    <div class="section-head between">
+      <h2>Dossies Ativos</h2>
+      <button class="ver-arquivos" (click)="irBiblioteca()">Ver Arquivos</button>
+    </div>
+
+    
+    <div class="estado-centro" *ngIf="carregando">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+
+    
+    <div class="estado-centro" *ngIf="!carregando && erro">
+      <p class="vazio-texto">{{ erro }}</p>
+    </div>
+
+   
+    <div class="dossies-grid" *ngIf="!carregando && !erro && dossies.length > 0">
+      <div class="dossie" *ngFor="let d of dossies">
+        <div class="capa">
+          <div class="capa-grad"></div>
+          <img *ngIf="d.capa_url" [src]="d.capa_url" [alt]="d.titulo">
+          <div class="capa-placeholder" *ngIf="!d.capa_url">
+            <ion-icon name="book-outline"></ion-icon>
+          </div>
+          <span class="badge" [class.badge-aberto]="d.status === 'aberto'"
+                [class.badge-frio]="d.status === 'frio'">
+            {{ d.status === 'aberto' ? 'Aberto' : 'Frio' }}
+          </span>
+        </div>
+        <h4 class="dossie-titulo">{{ d.titulo }}</h4>
+        <p class="dossie-caso">Caso #{{ d.numero }}</p>
+      </div>
+    </div>
+
+  
+    <div class="estado-centro coluna" *ngIf="!carregando && !erro && dossies.length === 0">
+      <ion-icon name="book-outline" class="vazio-icon"></ion-icon>
+      <p class="vazio-texto">Sem casos. Parece que voce esta no inicio da carreira, detetive.</p>
+    </div>
+  </section>
+
+</ion-content>

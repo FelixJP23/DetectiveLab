@@ -1,0 +1,100 @@
+/* ===========================================================
+   Registro - tema noir DetectiveLab
+   Arquivo: src/app/register/register.page.scss
+   =========================================================== */
+
+.auth-content {
+  --background: var(--dl-bg);
+  --padding-start: 28px;
+  --padding-end: 28px;
+}
+
+.auth-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(211, 47, 47, 0.12) 0%, transparent 45%),
+    var(--dl-bg);
+  z-index: 0;
+}
+
+.auth-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.brand { text-align: center; margin-bottom: 32px; }
+.brand h1 {
+  font-family: var(--dl-font-display);
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  color: var(--dl-text);
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+.brand h1 .accent { color: var(--dl-red-soft); }
+.brand p {
+  font-family: var(--dl-font-body);
+  color: var(--dl-text-variant);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.field {
+  --background: var(--dl-surface-lowest);
+  --border-radius: 0;
+  --highlight-color-focused: var(--dl-red-soft);
+  --padding-start: 14px;
+  --padding-end: 14px;
+  margin-bottom: 14px;
+  border: 1px solid var(--dl-outline-variant);
+}
+.field ion-label {
+  font-family: var(--dl-font-body) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 12px !important;
+  color: var(--dl-text-variant) !important;
+}
+.field ion-input {
+  --color: var(--dl-text);
+  font-family: var(--dl-font-body);
+}
+
+.btn-registrar {
+  --background: var(--dl-red);
+  --background-activated: var(--dl-red-deep);
+  --color: #ffffff;
+  --border-radius: 0;
+  --box-shadow: 0 0 18px rgba(211, 47, 47, 0.25);
+  font-family: var(--dl-font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  height: 52px;
+  margin-top: 20px;
+}
+
+.erro-msg {
+  display: block;
+  font-family: var(--dl-font-body);
+  color: var(--dl-red-soft);
+  font-size: 14px;
+  text-align: center;
+  margin-top: 14px;
+  min-height: 18px;
+}
+
+/* Toolbar escura coerente */
+.auth-toolbar {
+  --background: var(--dl-surface);
+  --color: var(--dl-red-soft);
+}

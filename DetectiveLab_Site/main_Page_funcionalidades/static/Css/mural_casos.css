@@ -1,0 +1,87 @@
+
+.chiaroscuro-gradient {
+  background: linear-gradient(90deg, #121414 0%, rgba(18,20,20,0.8) 40%, rgba(18,20,20,0) 100%);
+}
+.chiaroscuro-v-gradient {
+  background: linear-gradient(0deg, #121414 0%, rgba(18,20,20,0.9) 20%, rgba(18,20,20,0) 100%);
+}
+
+.evidence-glow:hover {
+  box-shadow: 0 0 15px rgba(255, 179, 172, 0.1);
+}
+
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+
+.autor-li.ativo .nome { color: #ffb3ac; }
+.autor-li.ativo .marcador { display: block; }
+.autor-li.ativo .nome {
+  filter: drop-shadow(0 0 8px rgba(255,179,172,0.2));
+}
+
+
+#conteudo-autor.trocando { opacity: 0; }
+#autor-foto.trocando { opacity: 0; }
+
+
+.obra-card { flex-shrink: 0; width: 140px; cursor: pointer; }
+.obra-thumb {
+  width: 100%;
+  height: 200px;
+  background-color: #282a2b;
+  border: 1px solid rgba(91,64,61,0.5);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.obra-card:hover .obra-thumb {
+  border-color: #ffb3ac;
+  box-shadow: 0 0 15px rgba(255,179,172,0.1);
+}
+.obra-thumb .obra-capa-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.obra-thumb .material-symbols-outlined {
+  color: #5b403d;
+  font-size: 32px;
+  z-index: 10;
+  transition: color 0.3s ease;
+}
+.obra-card:hover .obra-thumb .material-symbols-outlined { color: rgba(255,179,172,0.5); }
+.obra-thumb .obra-underline {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 4px;
+  background: #ffb3ac;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.obra-card:hover .obra-thumb .obra-underline { transform: scaleX(1); }
+
+.obra-titulo {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-size: 11px;
+  color: #e2e2e2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.obra-ano {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-size: 9px;
+  color: rgba(228,190,186,0.6);
+}

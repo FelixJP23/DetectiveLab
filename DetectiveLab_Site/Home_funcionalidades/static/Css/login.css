@@ -1,0 +1,228 @@
+
+
+:root {
+  --bg:        #0a0b0d;
+  --ink:       #f4f4f0;
+  --muted:     #9aa0a6;
+  --red:       #d61f26;
+  --red-dark:  #a3151b;
+  --img-max-opacity: 0.5;   
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Oswald', sans-serif;
+  overflow: hidden;
+}
+
+
+.bg-base {
+  position: fixed;
+  inset: 0;
+  background:
+    url('/static/images/Login_background.jpg') center / cover no-repeat,
+    var(--bg);                       
+  z-index: 0;
+}
+
+
+
+
+
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: rgba(10, 11, 13, 0.35);   /* veu leve, ajuste 0.25-0.45 a gosto */
+}
+
+
+
+
+.auth-wrap {
+  position: relative;
+  z-index: 3;
+  min-height: calc(100vh - 112px);   
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(15, 16, 19, 0.72);
+  border: 1px solid rgba(214,31,38,0.35);
+  backdrop-filter: blur(6px);
+  padding: 44px 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  animation: cardIn 0.7s ease forwards;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth-card h1 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}
+.auth-card h1 .hl { color: var(--red); }
+
+.auth-card .sub {
+  color: var(--muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+
+.field { margin-bottom: 20px; }
+
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.field input {
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--ink);
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  padding: 12px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.field input::placeholder { color: rgba(154,160,166,0.6); }
+.field input:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(214,31,38,0.18);
+}
+
+
+.btn-submit {
+  width: 100%;
+  margin-top: 8px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.05s ease;
+}
+.btn-submit:hover { background: var(--red-dark); }
+.btn-submit:active { transform: translateY(1px); }
+
+
+.auth-foot {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+.auth-foot a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+.auth-foot a:hover { color: var(--red); }
+
+@media (max-width: 600px) {
+  .topbar { padding: 24px 24px 0; }
+  .auth-card { padding: 34px 26px; }
+}
+
+
+/* ---------- CIRCULO DE FOTO ---------- */
+.photo-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+/* O circulo clicavel: agora e um container relativo para os filhos absolutos */
+.photo-upload {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  border: 2px dashed rgba(214,31,38,0.6);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;          /* <-- ancora para os filhos absolutos */
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+.photo-upload:hover {
+  border-color: var(--red);
+  transform: scale(1.03);
+}
+
+/* Imagem da previa e o placeholder ocupam o circulo inteiro, sobrepostos */
+.photo-upload img,
+.photo-upload .photo-placeholder {
+  position: absolute;
+  inset: 0;                    /* preenche todo o circulo */
+  width: 100%;
+  height: 100%;
+}
+
+.photo-upload img {
+  object-fit: cover;           /* foto preenche cortando o excesso */
+}
+
+/* Forca o hidden a funcionar mesmo com a regra acima */
+.photo-upload img[hidden] {
+  display: none;
+}
+
+/* Placeholder centralizado dentro do circulo */
+.photo-upload .photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0 8px;
+}
+.photo-upload .photo-placeholder svg { color: var(--red); }
+
+/* Esconde o input de arquivo real */
+.photo-field input[type="file"] {
+  position: absolute;
+  width: 1px; height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.photo-upload .photo-placeholder[hidden] {
+  display: none;
+}

@@ -1,0 +1,40 @@
+
+
+:root {
+  --ion-color-primary: #d32f2f;
+  --ion-color-primary-rgb: 211, 47, 47;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #ba1a20;
+  --ion-color-primary-tint: #ffb3ac;
+
+  --ion-background-color: #121414;
+  --ion-background-color-rgb: 18, 20, 20;
+  --ion-text-color: #e2e2e2;
+  --ion-text-color-rgb: 226, 226, 226;
+
+  --ion-color-step-50:  #1a1c1c;
+  --ion-color-step-100: #1e2020;
+  --ion-color-step-150: #242626;
+  --ion-color-step-200: #282a2b;
+  --ion-color-step-250: #2e3030;
+  --ion-color-step-300: #333535;
+
+
+  --dl-bg: #121414;
+  --dl-surface: #1e2020;
+  --dl-surface-low: #1a1c1c;
+  --dl-surface-lowest: #0d0e0f;
+  --dl-red: #d32f2f;
+  --dl-red-deep: #ba1a20;
+  --dl-red-soft: #ffb3ac;
+  --dl-text: #e2e2e2;
+  --dl-text-variant: #e4beba;
+  --dl-outline: #ab8985;
+  --dl-outline-variant: #5b403d;
+
+  --dl-font-display: 'Playfair Display', serif;
+  --dl-font-body: 'Archivo Narrow', sans-serif;
+}
+
+body { font-family: var(--dl-font-body); }

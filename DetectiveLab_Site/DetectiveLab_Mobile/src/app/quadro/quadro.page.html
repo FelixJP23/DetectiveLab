@@ -1,0 +1,109 @@
+<ion-content [fullscreen]="true" class="quadro-content" [scrollY]="false">
+
+  <!-- Header -->
+  <header class="app-header">
+    <button class="icon-btn" (click)="voltar()"><ion-icon name="arrow-back"></ion-icon></button>
+    <div class="header-titulo">
+      <span class="deducoes">DEDUCOES</span>
+      <span class="livro-nome">{{ livroTitulo }}</span>
+    </div>
+    <button class="icon-btn" (click)="abrirSeletorCap()"><ion-icon name="layers-outline"></ion-icon></button>
+  </header>
+
+  <!-- Barra de acoes -->
+  <div class="acoes-bar">
+    <button class="acao" (click)="acionarOcr(ocrInput)">
+      <ion-icon name="map-outline"></ion-icon><span>Importar</span>
+    </button>
+    <button class="acao" (click)="criarCard()">
+      <ion-icon name="add-circle-outline"></ion-icon><span>Anotacao</span>
+    </button>
+    <button class="acao destaque" (click)="salvar()" [disabled]="salvando">
+      <ion-spinner *ngIf="salvando" name="crescent"></ion-spinner>
+      <ng-container *ngIf="!salvando"><ion-icon name="save"></ion-icon><span>Salvar</span></ng-container>
+    </button>
+    <!-- input escondido para camera/galeria -->
+    <input #ocrInput type="file" accept="image/*" capture="environment" hidden (change)="onImagemOcr($event)">
+  </div>
+
+  <!-- Indicador de capitulo + modo conexao -->
+  <div class="sub-bar">
+    <span class="cap-atual">Capitulo {{ numeroAtual }}</span>
+    <span class="dica-conexao" *ngIf="pinoArmado">Toque no pino de outro card para conectar</span>
+  </div>
+
+  <!-- Estados -->
+  <div class="estado-centro" *ngIf="carregando">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+  <div class="estado-centro" *ngIf="!carregando && erro">
+    <p class="vazio-texto">{{ erro }}</p>
+  </div>
+
+  <!-- BOARD (rolavel) -->
+  <div class="board-container" #boardContainer *ngIf="!carregando && !erro">
+    <div class="board" [style.width.px]="boardW" [style.height.px]="boardH">
+
+      <!-- SVG dos fios (atras dos cards) -->
+      <svg class="threads" [attr.width]="boardW" [attr.height]="boardH">
+        <line *ngFor="let l of linhas" [attr.x1]="l.x1" [attr.y1]="l.y1"
+              [attr.x2]="l.x2" [attr.y2]="l.y2" class="thread-line"></line>
+      </svg>
+
+      <!-- Cards -->
+      <div *ngFor="let card of cards; trackBy: trackById"
+           class="note-card" [class.note-card-img]="card.isImagem"
+           [style.left.px]="card.x" [style.top.px]="card.y"
+           (pointerdown)="onPointerDown($event, card)"
+           (pointermove)="onPointerMove($event, card)"
+           (pointerup)="onPointerUp($event, card)">
+
+        <!-- Pino para conectar -->
+        <div class="pino" [class.armado]="pinoArmado === card.id" (click)="togglePino(card, $event)"></div>
+
+        <!-- Card de imagem (OCR) -->
+        <ng-container *ngIf="card.isImagem">
+          <img class="note-img" [src]="card.imagem_url" alt="Diagrama">
+          <input class="note-input" [(ngModel)]="card.titulo" placeholder="TITULO">
+          <div class="sub-block" *ngFor="let s of card.subtitulos">
+            <input class="note-input sub-titulo" [(ngModel)]="s.titulo">
+            <textarea class="note-textarea" [(ngModel)]="s.conteudo" placeholder="Escreva sobre este item..."></textarea>
+          </div>
+        </ng-container>
+
+        <!-- Card comum -->
+        <ng-container *ngIf="!card.isImagem">
+          <input class="note-input" [(ngModel)]="card.titulo" placeholder="TITULO">
+          <textarea class="note-textarea" [(ngModel)]="card.descricao" placeholder="Escreva sua anotacao..."></textarea>
+        </ng-container>
+
+        <!-- Remover -->
+        <button class="btn-remover" (click)="removerCard(card, $event)">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" [class.show]="toastMsg">{{ toastMsg }}</div>
+
+  <!-- ===================== MODAL CAPITULOS ===================== -->
+  <ion-modal [isOpen]="capModalAberto" (didDismiss)="fecharSeletorCap()" class="dl-modal-sheet"
+             [breakpoints]="[0, 0.5, 0.9]" [initialBreakpoint]="0.5">
+    <ng-template>
+      <div class="cap-sheet">
+        <h3>Capitulos</h3>
+        <button class="cap-row" *ngFor="let c of capitulos"
+                [class.ativo]="c.numero === numeroAtual" (click)="trocarCapitulo(c.numero)">
+          Capitulo {{ c.numero }}
+        </button>
+        <button class="cap-novo" (click)="criarCapitulo()">
+          <ion-icon name="add"></ion-icon> Novo Capitulo
+        </button>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

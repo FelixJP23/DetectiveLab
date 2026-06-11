@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DetectiveLab - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'Css/login.css' %}">
+</head>
+<body>
+
+  <div class="bg-base"></div>
+  <div class="overlay"></div>
+
+  <main class="auth-wrap">
+  <section class="auth-card">
+    <h1>Bem-<span class="hl">vindo</span></h1>
+    <p class="sub">DetectiveLab</p>
+
+    <form method="post" action="">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="field">
+        <label for="{{ form.username.id_for_label }}">E-mail</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="field-errors">{{ form.username.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.password.id_for_label }}">Senha</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          <div class="field-errors">{{ form.password.errors }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-submit">Entrar</button>
+    </form>
+
+    <p class="auth-foot">
+      Não tem conta? <a href="{% url 'Register' %}">Registrar</a>
+    </p>
+  </section>
+</main>
+
+</body>
+</html>

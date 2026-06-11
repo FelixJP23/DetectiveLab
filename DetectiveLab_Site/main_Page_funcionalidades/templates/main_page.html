@@ -1,0 +1,348 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>DetectiveLab - Unravel the Mystery</title>
+
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Archivo+Narrow:wght@400;600&display=swap" rel="stylesheet"/>
+
+
+  <link rel="stylesheet" href="{% static 'Css/main_page.css' %}">
+
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-background":              "#e2e2e2",
+            "surface":                    "#121414",
+            "surface-container-highest":  "#333535",
+            "surface-bright":             "#38393a",
+            "surface-container-high":     "#282a2b",
+            "surface-container":          "#1e2020",
+            "surface-container-low":      "#1a1c1c",
+            "surface-container-lowest":   "#0d0e0f",
+            "surface-dim":                "#121414",
+            "surface-variant":            "#333535",
+            "on-surface":                 "#e2e2e2",
+            "on-surface-variant":         "#e4beba",
+            "outline":                    "#ab8985",
+            "outline-variant":            "#5b403d",
+            "primary":                    "#ffb3ac",
+            "primary-container":          "#d32f2f",
+            "primary-fixed":              "#ffdad6",
+            "primary-fixed-dim":          "#ffb3ac",
+            "on-primary":                 "#680008",
+            "on-primary-container":       "#fff2f0",
+            "on-primary-fixed":           "#410003",
+            "on-primary-fixed-variant":   "#930010",
+            "secondary":                  "#c8c6c5",
+            "secondary-container":        "#474746",
+            "secondary-fixed":            "#e5e2e1",
+            "secondary-fixed-dim":        "#c8c6c5",
+            "on-secondary":               "#313030",
+            "on-secondary-container":     "#b7b5b4",
+            "on-secondary-fixed":         "#1c1b1b",
+            "on-secondary-fixed-variant": "#474746",
+            "tertiary":                   "#c9c6c5",
+            "tertiary-container":         "#716f6f",
+            "tertiary-fixed":             "#e5e2e1",
+            "tertiary-fixed-dim":         "#c9c6c5",
+            "on-tertiary":                "#313030",
+            "on-tertiary-container":      "#f7f3f3",
+            "on-tertiary-fixed":          "#1c1b1b",
+            "on-tertiary-fixed-variant":  "#474646",
+            "error":                      "#ffb4ab",
+            "error-container":            "#93000a",
+            "on-error":                   "#690005",
+            "on-error-container":         "#ffdad6",
+            "background":                 "#121414",
+            "inverse-surface":            "#e2e2e2",
+            "inverse-on-surface":         "#2f3131",
+            "inverse-primary":            "#ba1a20",
+            "surface-tint":               "#ffb3ac"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg:      "0.5rem",
+            xl:      "0.75rem",
+            full:    "9999px"
+          },
+          spacing: {
+            "container-max-width": "1200px",
+            "unit":    "8px",
+            "margin":  "40px",
+            "gutter":  "24px"
+          },
+          fontFamily: {
+            "headline-lg-mobile": ["Playfair Display"],
+            "headline-lg":        ["Playfair Display"],
+            "headline-xl":        ["Playfair Display"],
+            "body-md":            ["Archivo Narrow"],
+            "label-sm":           ["Archivo Narrow"]
+          },
+          fontSize: {
+            "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+            "headline-lg":        ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+            "headline-xl":        ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "body-md":            ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+            "label-sm":           ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a[href]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#' || href.startsWith('#') ||
+            href.startsWith('http') || link.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.add('leaving');
+        setTimeout(() => { window.location.href = href; }, 250);
+      });
+    });
+  });
+</script>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md">
+
+ 
+  <header class="fixed w-full bg-background/95 backdrop-blur-md border-b border-surface-container-highest top-0 z-50">
+    <div class="flex justify-between items-center w-full px-10 py-4 max-w-[container-max-width] mx-auto">
+
+    
+      <div class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">
+        DETECTIVELAB
+      </div>
+
+    
+      <nav class="hidden md:flex gap-8 items-center">
+        <a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm uppercase tracking-widest hover:text-primary transition-all duration-300"
+           href="#">Home</a>
+        <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest"
+          href="{% url 'biblioteca' %}">Biblioteca</a>
+        
+      </nav>
+
+  
+      <div class="flex items-center gap-6 text-primary">
+
+       
+        <button aria-label="Notificações"
+                class="hover:text-primary transition-all duration-300 active:scale-95">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+
+       
+        <div class="w-9 h-9 rounded-full bg-surface-container-highest border border-surface-container-highest
+                    flex items-center justify-center overflow-hidden cursor-pointer
+                    active:scale-95 transition-transform duration-300">
+          {% if user.foto %}
+            <img src="{{ user.foto.url }}"
+                 alt="{{ user.username }}"
+                 class="w-full h-full object-cover">
+          {% else %}
+            {# Ícone padrão se o usuário não tiver foto #}
+            <span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+          {% endif %}
+        </div>
+
+        <!-- Logout -->
+        <form method="post" action="{% url 'logout' %}" class="logout-form">
+          {% csrf_token %}
+          <button type="submit"
+                  class="font-label-sm text-label-sm uppercase tracking-widest
+                         text-on-surface-variant hover:text-primary transition-colors duration-300">
+            Sair
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </header>
+
+
+  <main class="flex-grow pt-[88px]">
+
+ 
+    <section class="px-10 pt-14 pb-2 max-w-[container-max-width] mx-auto">
+      <p class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant mb-1">
+        Estávamos te esperando
+      </p>
+      <h1 class="font-headline-xl text-headline-xl text-on-surface">
+        Detetive <span class="text-primary">{{ user.username }}</span>
+      </h1>
+    </section>
+
+  
+    <section class="px-10 py-16 max-w-[container-max-width] mx-auto">
+      <div class="flex items-center gap-4 mb-12">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface whitespace-nowrap">
+          Ferramentas do Ofício
+        </h2>
+        <div class="red-string flex-grow"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        
+        <a class="glass-card group block p-10 h-[300px] flex flex-col justify-between relative overflow-hidden"
+           href="{%url 'arquivo_evidencias'%}">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/5 rounded-full blur-3xl
+                      group-hover:bg-primary-container/20 transition-all duration-700"></div>
+          <div>
+            <span class="material-symbols-outlined text-4xl text-primary mb-4"
+                  style="font-variation-settings: 'FILL' 1;">search_insights</span>
+            <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">
+              Arquivo de Evidências
+            </h3>
+            <p class="text-on-surface-variant max-w-sm">
+              Precisa de ajuda? Procure e contribua no banco de conhecimento dos seus colegas de profissão. A verdade pode estar a uma busca de distância.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-primary font-label-sm text-label-sm uppercase
+                      tracking-widest mt-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Acessar banco de evidências
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </div>
+        </a>
+
+       
+        <a class="glass-card group block p-10 h-[300px] flex flex-col justify-between relative overflow-hidden"
+           href="{% url 'mural_casos' %}">
+          <div class="absolute bottom-0 left-0 w-32 h-32 bg-primary-container/5 rounded-full blur-3xl
+                      group-hover:bg-primary-container/20 transition-all duration-700"></div>
+          <div>
+            <span class="material-symbols-outlined text-4xl text-primary mb-4"
+                  style="font-variation-settings: 'FILL' 1;">hub</span>
+            <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">
+              Estudo da arte
+            </h3>
+            <p class="text-on-surface-variant max-w-sm">
+              Aquele que deseja entender o presente deve consultar o passado. Aprenda com os antigos mestres e suas obras quanto a arte do mistério.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-primary font-label-sm text-label-sm uppercase
+                      tracking-widest mt-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Estudar mestres
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+
+    <section class="px-10 py-20 bg-surface-container-low border-surface-container-highest border-t">
+      <div class="max-w-[container-max-width] mx-auto">
+
+        <div class="flex items-center justify-between mb-12">
+          <h2 class="font-headline-lg text-headline-lg text-on-surface">Dossiês Ativos</h2>
+          <a class="font-label-sm text-label-sm text-primary uppercase tracking-widest
+                    hover:underline decoration-primary underline-offset-4"
+             href="{% url 'biblioteca' %}">Ver Arquivos</a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+          {# livros_com_numero é uma lista de tuplas: (numero_do_caso, livro) #}
+          {# Exibe apenas livros com status 'aberto' ou 'frio'              #}
+          {% for numero, livro in livros_com_numero %}
+
+            <div class="group cursor-pointer">
+              <div class="relative aspect-[2/3] overflow-hidden
+                          border border-surface-container-highest group-hover:border-primary
+                          transition-colors duration-300 mb-4 bg-surface-container">
+
+              
+                <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10"></div>
+
+               
+                {% if livro.capa %}
+                  <img alt="{{ livro.titulo }}"
+                       class="w-full h-full object-cover filter grayscale
+                              group-hover:grayscale-0 transition-all duration-700
+                              scale-105 group-hover:scale-100"
+                       src="{{ livro.capa.url }}"/>
+                {% else %}
+                  <div class="w-full h-full flex items-center justify-center bg-surface-container">
+                    <span class="material-symbols-outlined text-5xl text-surface-container-highest
+                                 group-hover:text-primary transition-colors duration-300">book</span>
+                  </div>
+                {% endif %}
+
+              
+                {% if livro.status == 'aberto' %}
+                  <div class="absolute top-2 right-2 z-20 bg-primary-container text-white
+                              px-2 py-1 font-label-sm text-[10px] uppercase tracking-widest">
+                    Aberto
+                  </div>
+                {% elif livro.status == 'frio' %}
+                  <div class="absolute top-2 right-2 z-20 bg-surface-container-highest
+                              text-on-surface-variant px-2 py-1 font-label-sm text-[10px]
+                              uppercase tracking-widest border border-surface-container-highest">
+                    Frio
+                  </div>
+                {% endif %}
+
+              </div>
+
+             
+              <h4 class="font-headline-lg-mobile text-[20px] text-on-surface mb-1 truncate">
+                {{ livro.titulo }}
+              </h4>
+              <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
+                Caso #{{ numero }}
+              </p>
+            </div>
+
+          {% empty %}
+            {# Estado vazio: nenhum livro cadastrado ou todos concluídos #}
+            <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+              <span class="material-symbols-outlined text-6xl text-surface-container-highest mb-6">
+                search_off
+              </span>
+              <p class="text-on-surface-variant font-body-md italic max-w-sm">
+                Sem casos. Parece que você está no início da carreira, detetive.
+              </p>
+            </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <footer class="bg-surface-container-lowest border-t border-surface-container-highest">
+    <div class="flex flex-col md:flex-row justify-between items-center w-full
+                px-10 py-12 gap-gutter max-w-[container-max-width] mx-auto">
+
+      <div class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight mb-6 md:mb-0">
+        DETECTIVELAB
+      </div>
+
+     
+
+      <div class="font-label-sm text-label-sm uppercase tracking-wider text-primary mt-6 md:mt-0 text-center md:text-right">
+        © 1841–2026 DETECTIVELAB. TODAS AS PISTAS RESERVADAS.
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>

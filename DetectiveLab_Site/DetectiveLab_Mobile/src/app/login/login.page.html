@@ -1,0 +1,37 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-bg"></div>
+
+  <div class="auth-wrapper">
+    <!-- Marca -->
+    <div class="brand">
+      <div class="logo-badge">
+        <ion-icon name="search-outline"></ion-icon>
+      </div>
+      <h1>DETECTIVE<span class="accent">LAB</span></h1>
+      <p>Acesse seu dossie</p>
+    </div>
+
+    <!-- Campos -->
+    <ion-item class="field" lines="none">
+      <ion-label position="stacked">E-mail</ion-label>
+      <ion-input type="email" [(ngModel)]="email" autocomplete="email"
+                 placeholder="voce@exemplo.com"></ion-input>
+    </ion-item>
+
+    <ion-item class="field" lines="none">
+      <ion-label position="stacked">Senha</ion-label>
+      <ion-input type="password" [(ngModel)]="password" autocomplete="current-password"></ion-input>
+    </ion-item>
+
+    <ion-text class="erro-msg" *ngIf="erro">{{ erro }}</ion-text>
+
+    <ion-button expand="block" class="btn-entrar" (click)="entrar()" [disabled]="carregando">
+      <ion-spinner *ngIf="carregando" name="crescent"></ion-spinner>
+      <span *ngIf="!carregando">Entrar</span>
+    </ion-button>
+
+    <ion-button expand="block" fill="clear" class="btn-link" (click)="irParaRegistro()">
+      Nao tem conta? Registre-se
+    </ion-button>
+  </div>
+</ion-content>

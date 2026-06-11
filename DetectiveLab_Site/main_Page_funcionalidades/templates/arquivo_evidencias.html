@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="pt-br">
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Arquivo de Evidencias - DetectiveLab</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'Css/arquivo_evidencias.css' %}">
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: { extend: {
+        colors: {
+          "background": "#121414", "on-background": "#e2e2e2",
+          "surface": "#121414", "surface-dim": "#121414",
+          "surface-container": "#1e2020", "surface-container-low": "#1a1c1c",
+          "surface-container-lowest": "#0d0e0f", "surface-container-high": "#282a2b",
+          "surface-container-highest": "#333535", "surface-variant": "#333535",
+          "on-surface": "#e2e2e2", "on-surface-variant": "#e4beba",
+          "outline": "#ab8985", "outline-variant": "#5b403d",
+          "primary": "#ffb3ac", "primary-container": "#d32f2f",
+          "on-primary": "#680008", "on-primary-container": "#fff2f0",
+          "inverse-primary": "#ba1a20", "secondary-container": "#474746"
+        },
+        spacing: { "unit": "8px", "margin": "40px", "gutter": "24px", "container-max-width": "1200px" },
+        fontFamily: {
+          "headline-lg": ["Playfair Display"], "headline-xl": ["Playfair Display"],
+          "headline-lg-mobile": ["Playfair Display"],
+          "body-md": ["Archivo Narrow"], "label-sm": ["Archivo Narrow"]
+        },
+        fontSize: {
+          "label-sm": ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "600" }],
+          "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+          "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }],
+          "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+          "headline-xl": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700" }]
+        }
+      }}
+    }
+  </script>
+</head>
+
+<body class="font-body-md text-body-md min-h-screen pb-24"
+      data-meus-titulos='{{ meus_titulos_json|safe }}'>
+
+  {% csrf_token %}
+
+  <!-- HEADER -->
+  <header class="bg-background/95 backdrop-blur-md sticky top-0 z-40 border-b border-surface-container-highest">
+    <div class="flex justify-between items-center w-full px-10 py-4 max-w-[container-max-width] mx-auto">
+      <a class="font-headline-lg text-headline-lg text-on-surface uppercase" href="{% url 'main_page' %}">DETECTIVELAB</a>
+      <nav class="hidden md:flex gap-8 items-center">
+        <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest" href="{% url 'main_page' %}">Home</a>
+        <a class="text-on-surface-variant hover:text-primary transition-all duration-300 font-label-sm text-label-sm uppercase tracking-widest" href="{% url 'biblioteca' %}">Biblioteca</a>
+        <a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm uppercase tracking-widest" href="#">Evidencias</a>
+      </nav>
+      <form method="post" action="{% url 'logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300">Sair</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="max-w-[container-max-width] mx-auto px-6 md:px-margin mt-8">
+
+    <!-- Cabecalho + busca + exportar -->
+    <header class="mb-12">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+        <div>
+          <h1 class="font-headline-xl text-headline-xl text-on-surface mb-4">Arquivo de Evidencias</h1>
+          <p class="text-on-surface-variant max-w-2xl">Arquivos compartilhados. Casos resolvidos e irresolutos. Explore e importe as anotacoes de outros investigadores.</p>
+        </div>
+        <button id="btn-exportar" type="button"
+                class="bg-primary-container text-on-primary-container hover:bg-inverse-primary transition-colors
+                       px-6 py-3 font-label-sm text-label-sm uppercase tracking-widest flex items-center gap-2 shadow-[0_0_15px_rgba(211,47,47,0.3)] whitespace-nowrap">
+          <span class="material-symbols-outlined">upload</span>
+          Exportar Anotacoes
+        </button>
+      </div>
+
+      <div class="relative max-w-2xl glass-panel p-2 flex items-center">
+        <span class="material-symbols-outlined text-outline ml-3 mr-2">search</span>
+        <input id="busca" type="text" autocomplete="off"
+               class="text-input-noir w-full bg-transparent border-none focus:ring-0 px-2 py-3 placeholder:text-outline-variant font-body-md text-body-md"
+               placeholder="Procurar por titulo do livro ou nome do usuario...">
+      </div>
+    </header>
+
+    <!-- Grade de anotacoes compartilhadas -->
+    <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+      {% for ex in compartilhadas %}
+        <article class="evidencia-card glass-panel flex flex-col group relative overflow-hidden cursor-pointer"
+                 data-export-id="{{ ex.id }}"
+                 data-titulo="{{ ex.titulo_livro }}"
+                 data-autor="{{ ex.autor.username }}"
+                 data-detalhes="{{ ex.detalhes }}"
+                 data-capitulos="{{ ex.qtd_capitulos }}"
+                 {% if ex.capa %}data-capa="{{ ex.capa.url }}"{% endif %}>
+          <div class="h-48 bg-surface-container-highest relative overflow-hidden">
+            {% if ex.capa %}
+              <img alt="{{ ex.titulo_livro }}" src="{{ ex.capa.url }}"
+                   class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500 group-hover:scale-105">
+            {% else %}
+              <div class="w-full h-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-5xl text-surface-container-highest">book</span>
+              </div>
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-t from-[#1e2020] to-transparent"></div>
+          </div>
+          <div class="p-6 flex-1 flex flex-col">
+            <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2 line-clamp-2">{{ ex.titulo_livro }}</h3>
+            <div class="flex items-center gap-3 mt-auto pt-6 border-t border-outline-variant/30">
+              <div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline/30 flex items-center justify-center">
+                {% if ex.autor.foto %}
+                  <img src="{{ ex.autor.foto.url }}" alt="{{ ex.autor.username }}" class="w-full h-full object-cover">
+                {% else %}
+                  <span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+                {% endif %}
+              </div>
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">{{ ex.autor.username }}</span>
+            </div>
+            <button class="btn-importar mt-4 w-full bg-primary-container text-on-primary-container hover:bg-inverse-primary transition-colors py-3 font-label-sm text-label-sm uppercase tracking-widest flex items-center justify-center gap-2"
+                    data-export-id="{{ ex.id }}" data-titulo="{{ ex.titulo_livro }}">
+              <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">download</span>
+              Importar Anotacoes
+            </button>
+          </div>
+        </article>
+      {% empty %}
+        <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+          <span class="material-symbols-outlined text-6xl text-surface-container-highest mb-6">folder_off</span>
+          <p class="text-on-surface-variant italic">Nenhuma anotacao compartilhada ainda. Seja o primeiro a exportar.</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div id="busca-vazia" class="hidden flex-col items-center justify-center py-20 text-center">
+      <span class="material-symbols-outlined text-6xl text-surface-container-highest mb-6">search_off</span>
+      <p class="text-on-surface-variant italic">Nenhum caso encontrado para esta busca.</p>
+    </div>
+  </main>
+
+  <!-- ===================== MODAL EXPORTAR ===================== -->
+  <div id="export-modal" class="ev-modal">
+    <form method="post" action="{% url 'exportar_anotacoes' %}" class="ev-modal-card glass-strong">
+      {% csrf_token %}
+      <button type="button" id="export-close" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[28px]">close</span>
+      </button>
+      <h2 class="font-headline-xl text-[32px] text-on-surface mb-6 uppercase tracking-tight border-b border-outline-variant/30 pb-4">Exportar Anotacoes</h2>
+
+      <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Escolha o livro</label>
+      <select name="livro_id" required
+              class="w-full bg-surface-dim border border-outline-variant text-on-surface p-3 mb-6 font-body-md focus:border-primary focus:outline-none">
+        <option value="" disabled selected>Selecione um livro...</option>
+        {% for livro in meus_livros %}
+          <option value="{{ livro.pk }}">{{ livro.titulo }}</option>
+        {% endfor %}
+      </select>
+
+      <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2">Detalhes (opcional)</label>
+      <textarea name="detalhes" rows="4" placeholder="Escreva sobre suas anotacoes..."
+                class="w-full bg-surface-dim border border-outline-variant text-on-surface p-3 mb-6 font-body-md resize-none focus:border-primary focus:outline-none"></textarea>
+
+      <div class="flex justify-end gap-3">
+        <button type="button" id="export-cancel" class="border border-outline text-on-surface px-6 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:border-primary hover:text-primary transition-colors">Cancelar</button>
+        <button type="submit" class="bg-primary-container text-on-primary-container px-6 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-inverse-primary transition-colors flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px]">upload</span>
+          Exportar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ===================== OVERLAY DETALHES ===================== -->
+  <div id="detail-modal" class="ev-modal">
+    <div class="ev-modal-card glass-strong">
+      <button type="button" id="detail-close" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-[28px]">close</span>
+      </button>
+
+      <div class="flex flex-col md:flex-row gap-6">
+        <div id="detail-capa" class="w-full md:w-40 h-52 bg-surface-container-lowest border border-outline-variant flex items-center justify-center bg-cover bg-center flex-shrink-0">
+          <span class="material-symbols-outlined text-4xl text-surface-container-highest">book</span>
+        </div>
+        <div class="flex-1">
+          <h2 id="detail-titulo" class="font-headline-xl text-[32px] text-on-surface mb-2"></h2>
+          <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-4">
+            Por <span id="detail-autor"></span> &mdash; <span id="detail-capitulos"></span> capitulo(s)
+          </p>
+          <p id="detail-detalhes" class="text-on-surface/80 font-body-md leading-relaxed mb-6 whitespace-pre-line"></p>
+
+          <p id="detail-aviso" class="hidden text-primary font-body-md text-sm mb-4"></p>
+
+          <button id="detail-importar" type="button"
+                  class="bg-primary-container text-on-primary-container px-6 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-inverse-primary transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">download</span>
+            Importar Anotacoes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="ev-toast"></div>
+
+  <script src="{% static 'Css/arquivo_evidencias.js' %}"></script>
+</body>
+</html>
