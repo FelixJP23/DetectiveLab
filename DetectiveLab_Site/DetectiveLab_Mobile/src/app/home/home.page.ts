@@ -39,6 +39,8 @@ export class HomePage implements ViewWillEnter {
   }
 
   /**
+   * ionViewWillEnter roda toda vez que a tela aparece (inclusive ao voltar de
+   * outra pagina), diferente do ngOnInit que so roda uma vez. Assim, se o
    * usuario criar/editar um livro e voltar, a lista se atualiza.
    */
   async ionViewWillEnter() {
@@ -61,10 +63,10 @@ export class HomePage implements ViewWillEnter {
     }
   }
 
-  
+  // Navegacao
   irBiblioteca()  { this.router.navigateByUrl('/biblioteca'); }
-  irEvidencias()  { /* TODO: rota do arquivo de evidencias */ }
-  irMural()       { /* TODO: rota do mural de casos */ }
+  irEvidencias()  { this.router.navigateByUrl('/evidencias'); }
+  irMural()       { this.router.navigateByUrl('/mural'); }
 
   async sair() {
     await this.auth.logout();

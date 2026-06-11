@@ -1,0 +1,5 @@
+Django == 6.0.5
+djangorestframework == 3.17.1
+Pillow == 12.2.0
+pytesseract == 0.3.13
+django-cors-headers == 4.9.0

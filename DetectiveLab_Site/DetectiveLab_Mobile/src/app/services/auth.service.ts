@@ -5,15 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 /**
- * AuthService — centro da autenticacao do app.
- *
- * Responsabilidades:
- *  - login / registro / logout chamando a API Django
- *  - guardar e recuperar o TOKEN no Ionic Storage (persiste entre sessoes)
- *  - dizer se o usuario esta logado (isAuthenticated)
- *
- * O token guardado aqui e lido pelo AuthInterceptor, que o injeta em toda
- * requisicao. Assim, as telas nao precisam mexer com token diretamente.
+ * AuthService — centro da autenticacão.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {

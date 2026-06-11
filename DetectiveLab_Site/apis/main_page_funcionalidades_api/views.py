@@ -284,3 +284,45 @@ def mural_casos(request):
         'americanos': [a for a in ser.data if a['tradicao'] == 'americana'],
         'japoneses':  [a for a in ser.data if a['tradicao'] == 'japonesa'],
     })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def importar_ocr(request, capitulo_id):
+
+    capitulo = get_object_or_404(Capitulo, pk=capitulo_id, livro__usuario=request.user)
+    imagem = request.FILES.get('imagem')
+    if not imagem:
+        return Response({'ok': False, 'erro': 'Nenhuma imagem enviada'}, status=status.HTTP_400_BAD_REQUEST)
+
+    import pytesseract
+    from PIL import Image, ImageOps
+    from io import BytesIO
+
+    try:
+        dados_imagem = imagem.read()
+        imagem.seek(0)
+        img = Image.open(BytesIO(dados_imagem))
+        img = ImageOps.exif_transpose(img)
+        proc = ImageOps.autocontrast(ImageOps.grayscale(img))
+        texto = pytesseract.image_to_string(proc, lang='por+eng+jpn')
+    except Exception as e:
+        return Response({'ok': False, 'erro': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    linhas = [l.strip() for l in texto.splitlines() if l.strip()]
+    if not linhas:
+        return Response({'ok': False, 'erro': 'Nenhum texto reconhecido na imagem'}, status=status.HTTP_200_OK)
+
+    card = Card.objects.create(
+        capitulo=capitulo, titulo='Diagrama Importado', imagem=imagem, pos_x=120, pos_y=120,
+    )
+    for i, linha in enumerate(linhas):
+        Subtitulo.objects.create(card=card, titulo=linha, ordem=i)
+
+    url = card.imagem.url
+    return Response({
+        'ok': True,
+        'linhas': linhas,
+        'card_id': card.id,
+        'imagem_url': request.build_absolute_uri(url),
+    })

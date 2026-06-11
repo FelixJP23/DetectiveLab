@@ -1,0 +1,199 @@
+
+
+.quadro-content {
+  --background: var(--dl-bg);
+}
+
+
+.quadro-content::part(scroll) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---------- HEADER ---------- */
+.app-header {
+  position: relative; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--dl-surface);
+  border-bottom: 1px solid var(--dl-outline-variant);
+}
+.icon-btn {
+  background: none; border: none; color: var(--dl-red-soft);
+  cursor: pointer; padding: 0; display: flex;
+}
+.icon-btn ion-icon { font-size: 24px; }
+.header-titulo { display: flex; flex-direction: column; align-items: center; }
+.deducoes {
+  font-family: var(--dl-font-display); font-weight: 700; font-size: 18px;
+  color: var(--dl-red-soft); text-transform: uppercase; letter-spacing: 0.02em;
+}
+.livro-nome {
+  font-family: var(--dl-font-body); font-size: 10px;
+  color: var(--dl-text-variant); text-transform: uppercase; letter-spacing: 0.1em;
+  max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+
+.acoes-bar {
+  display: flex; gap: 8px; padding: 10px 16px;
+  background: var(--dl-surface-low);
+  border-bottom: 1px solid var(--dl-surface);
+}
+.acao {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: transparent; border: 1px solid var(--dl-outline-variant);
+  color: var(--dl-text-variant); cursor: pointer; padding: 8px 4px;
+  font-family: var(--dl-font-body); text-transform: uppercase;
+  letter-spacing: 0.06em; font-size: 10px;
+}
+.acao ion-icon { font-size: 20px; }
+.acao.destaque {
+  background: var(--dl-red); border-color: var(--dl-red); color: #fff;
+}
+.acao:disabled { opacity: 0.6; }
+
+
+.sub-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 16px; background: var(--dl-bg);
+  border-bottom: 1px solid var(--dl-surface);
+}
+.cap-atual {
+  font-family: var(--dl-font-body); text-transform: uppercase;
+  letter-spacing: 0.1em; font-size: 12px; color: var(--dl-red-soft); font-weight: 600;
+}
+.dica-conexao {
+  font-family: var(--dl-font-body); font-size: 11px;
+  color: var(--dl-text-variant); font-style: italic;
+}
+
+
+.board-container {
+  flex: 1 1 auto;       /* ocupa todo o espaco restante abaixo das barras */
+  min-height: 0;        /* permite encolher dentro do flex e rolar */
+  position: relative;
+  overflow: auto;
+  background-color: #121414;
+  background-image: radial-gradient(#2a2c2c 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-overflow-scrolling: touch;
+}
+.board { position: relative; }
+
+.threads { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.thread-line {
+  stroke: #ba1a20; stroke-width: 2;
+  filter: drop-shadow(0 0 4px rgba(186,26,32,0.6));
+}
+
+
+.note-card {
+  position: absolute;
+  width: 260px;
+  background: var(--dl-surface);
+  border: 1px solid var(--dl-outline-variant);
+  padding: 14px;
+  box-shadow: 0 0 15px rgba(186,26,32,0.1);
+  z-index: 10;
+  touch-action: none;   /* impede o scroll do board enquanto arrasta o card */
+}
+.note-card-img { width: 280px; }
+
+.pino {
+  position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #ba1a20; z-index: 20; cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.3);
+}
+.pino.armado {
+  box-shadow: 0 0 0 3px rgba(255,179,172,0.6), 0 0 10px rgba(186,26,32,0.8);
+  transform: translateX(-50%) scale(1.25);
+}
+
+.note-img {
+  width: 100%; max-height: 180px; object-fit: cover; display: block;
+  border: 1px solid var(--dl-outline-variant);
+  margin-bottom: 10px; filter: grayscale(1) contrast(1.1);
+}
+
+.note-input {
+  width: 100%; background: transparent; border: none;
+  color: var(--dl-red-soft);
+  font-family: var(--dl-font-body); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  border-bottom: 1px solid var(--dl-outline-variant);
+  padding: 4px 0; margin-bottom: 8px; outline: none;
+  -webkit-appearance: none; appearance: none;
+}
+.note-textarea {
+  width: 100%; min-height: 60px; background: rgba(13,14,15,0.5);
+  border: 1px solid var(--dl-surface);
+  color: var(--dl-text-variant);
+  font-family: var(--dl-font-body); font-size: 14px; line-height: 1.5;
+  padding: 6px 8px; resize: vertical; outline: none;
+  -webkit-appearance: none; appearance: none;
+}
+
+
+.sub-block { border-left: 2px solid var(--dl-outline-variant); padding-left: 8px; margin-top: 10px; }
+.sub-titulo { margin-bottom: 4px; border-bottom: 1px dashed var(--dl-outline-variant); }
+
+.btn-remover {
+  position: absolute; bottom: 4px; right: 4px;
+  background: none; border: none; cursor: pointer;
+  color: var(--dl-text-variant); opacity: 0.6; display: flex;
+}
+.btn-remover ion-icon { font-size: 18px; }
+
+
+.estado-centro {
+  flex: 1 1 auto;
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px 20px;
+}
+.vazio-texto {
+  font-family: var(--dl-font-body); font-style: italic;
+  color: var(--dl-text-variant); text-align: center; max-width: 280px;
+}
+
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--dl-surface); border-left: 4px solid var(--dl-red-soft);
+  color: var(--dl-text); padding: 12px 20px;
+  font-family: var(--dl-font-body); font-size: 14px;
+  z-index: 200; opacity: 0; transition: all 0.3s ease; pointer-events: none;
+  max-width: 90%;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+
+.dl-modal-sheet::part(content) { background: var(--dl-surface); }
+.cap-sheet { padding: 24px 20px 40px; }
+.cap-sheet h3 {
+  font-family: var(--dl-font-display); font-weight: 700; font-size: 20px;
+  color: var(--dl-text); margin: 0 0 16px;
+}
+.cap-row {
+  display: block; width: 100%; text-align: left;
+  background: none; border: none; cursor: pointer;
+  padding: 14px 12px; margin-bottom: 4px;
+  font-family: var(--dl-font-body); font-size: 16px; color: var(--dl-text-variant);
+  border-left: 3px solid transparent;
+}
+.cap-row.ativo {
+  color: var(--dl-red-soft); border-left-color: var(--dl-red-soft);
+  background: rgba(255,179,172,0.05); font-weight: 600;
+}
+.cap-novo {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; margin-top: 16px; padding: 13px;
+  background: transparent; border: 1px solid var(--dl-red-soft);
+  color: var(--dl-red-soft); cursor: pointer;
+  font-family: var(--dl-font-body); text-transform: uppercase;
+  letter-spacing: 0.1em; font-size: 13px;
+}
+.cap-novo ion-icon { font-size: 18px; }

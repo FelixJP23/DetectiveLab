@@ -1,0 +1,144 @@
+<ion-content [fullscreen]="true" class="evidencias-content">
+
+  <!-- Header -->
+  <header class="app-header">
+    <button class="icon-btn" (click)="voltar()"><ion-icon name="arrow-back"></ion-icon></button>
+    <div class="brand-mini">ARQUIVO DE EVIDENCIAS</div>
+    <div style="width: 24px;"></div>
+  </header>
+
+  <!-- Intro -->
+  <section class="intro">
+    <p class="intro-text">
+      O banco de conhecimento dos detetives. Procure por um caso, contribua com suas
+      proprias anotacoes ou importe as de um colega.
+    </p>
+  </section>
+
+  <!-- Busca + Exportar -->
+  <section class="controls">
+    <div class="search-box">
+      <ion-icon name="search"></ion-icon>
+      <input type="text" [(ngModel)]="filtro" placeholder="Buscar por caso ou detetive..." autocomplete="off">
+    </div>
+    <button class="btn-export" (click)="abrirExport()">
+      <ion-icon name="cloud-upload-outline"></ion-icon>
+      Contribuir com anotacoes
+    </button>
+  </section>
+
+  <!-- Estados -->
+  <div class="estado-centro" *ngIf="carregando">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+  <div class="estado-centro" *ngIf="!carregando && erro">
+    <p class="vazio-texto">{{ erro }}</p>
+  </div>
+
+  <!-- Grade de evidencias -->
+  <section class="grid-evidencias" *ngIf="!carregando && !erro">
+    <article class="ev-card" *ngFor="let ev of filtradas" (click)="abrirDetalhe(ev)">
+      <div class="ev-capa">
+        <img *ngIf="ev.capa_url" [src]="ev.capa_url" [alt]="ev.titulo_livro">
+        <div class="ev-capa-ph" *ngIf="!ev.capa_url"><ion-icon name="document-lock-outline"></ion-icon></div>
+        <span class="ev-caps">{{ ev.qtd_capitulos }} cap.</span>
+      </div>
+      <div class="ev-info">
+        <h3 class="ev-titulo">{{ ev.titulo_livro }}</h3>
+        <p class="ev-autor"><ion-icon name="person-circle-outline"></ion-icon> {{ ev.autor_nome }}</p>
+      </div>
+      <!-- botao importar (so habilita se tiver o livro de mesmo titulo) -->
+      <button class="ev-import" *ngIf="temOLivro(ev.titulo_livro)" (click)="importar(ev, $event)">
+        <ion-icon name="download-outline"></ion-icon>
+      </button>
+    </article>
+
+    <!-- vazio (busca) -->
+    <div class="estado-centro coluna span-full" *ngIf="filtradas.length === 0 && filtro">
+      <ion-icon name="search" class="vazio-icon"></ion-icon>
+      <p class="vazio-texto">Nenhuma evidencia encontrada para esta busca.</p>
+    </div>
+    <!-- vazio (geral) -->
+    <div class="estado-centro coluna span-full" *ngIf="compartilhadas.length === 0 && !filtro">
+      <ion-icon name="document-lock-outline" class="vazio-icon"></ion-icon>
+      <p class="vazio-texto">Nenhuma evidencia compartilhada ainda. Seja o primeiro a contribuir.</p>
+    </div>
+  </section>
+
+
+  <!-- ===================== MODAL EXPORTAR ===================== -->
+  <ion-modal [isOpen]="exportAberto" (didDismiss)="fecharExport()" class="dl-modal">
+    <ng-template>
+      <div class="modal-noir">
+        <button class="modal-close" (click)="fecharExport()"><ion-icon name="close"></ion-icon></button>
+        <h2 class="modal-titulo">Contribuir com Anotacoes</h2>
+        <p class="modal-sub">Escolha um caso da sua biblioteca para compartilhar suas anotacoes com a comunidade.</p>
+
+        <p class="campo-label">Caso a compartilhar</p>
+        <ion-select class="campo-select" [(ngModel)]="livroSelecionado"
+                    placeholder="Selecione um livro" interface="action-sheet"
+                    cancelText="Cancelar">
+          <ion-select-option *ngFor="let l of meusLivros" [value]="l.id">{{ l.titulo }}</ion-select-option>
+        </ion-select>
+
+        <p class="campo-label">Detalhes (opcional)</p>
+        <ion-textarea class="campo" [(ngModel)]="detalhesExport" [autoGrow]="true" rows="3"
+                      placeholder="Descreva o que sua contribuicao oferece..."></ion-textarea>
+
+        <div class="modal-acoes">
+          <button class="btn-sec" (click)="fecharExport()">Cancelar</button>
+          <button class="btn-pri" (click)="exportar()" [disabled]="exportando || !livroSelecionado">
+            <ion-spinner *ngIf="exportando" name="crescent"></ion-spinner>
+            <span *ngIf="!exportando">Compartilhar</span>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+
+  <!-- ===================== MODAL DETALHE / IMPORTAR ===================== -->
+  <ion-modal [isOpen]="detalheAberto" (didDismiss)="fecharDetalhe()" class="dl-modal">
+    <ng-template>
+      <div class="modal-noir" *ngIf="sel">
+        <button class="modal-close" (click)="fecharDetalhe()"><ion-icon name="close"></ion-icon></button>
+
+        <div class="detalhe-capa">
+          <img *ngIf="sel.capa_url" [src]="sel.capa_url" [alt]="sel.titulo_livro">
+          <div class="ev-capa-ph" *ngIf="!sel.capa_url"><ion-icon name="document-lock-outline"></ion-icon></div>
+        </div>
+
+        <h2 class="modal-titulo left">{{ sel.titulo_livro }}</h2>
+        <p class="ev-autor grande"><ion-icon name="person-circle-outline"></ion-icon> Por {{ sel.autor_nome }}</p>
+
+        <div class="meta-row">
+          <span class="meta-chip">{{ sel.qtd_capitulos }} capitulos</span>
+        </div>
+
+        <p class="campo-label">Detalhes da contribuicao</p>
+        <p class="detalhe-texto">{{ sel.detalhes || 'Sem detalhes fornecidos.' }}</p>
+
+        <!-- Aviso da regra de import -->
+        <div class="import-aviso" *ngIf="!temOLivro(sel.titulo_livro)">
+          Voce precisa ter um caso chamado <strong>"{{ sel.titulo_livro }}"</strong> na sua
+          biblioteca para importar estas anotacoes.
+        </div>
+
+        <div class="modal-acoes">
+          <button class="btn-pri full" (click)="importar(sel)"
+                  [disabled]="importando || !temOLivro(sel.titulo_livro)">
+            <ion-spinner *ngIf="importando" name="crescent"></ion-spinner>
+            <span *ngIf="!importando"><ion-icon name="download-outline"></ion-icon> Importar para meu caso</span>
+          </button>
+        </div>
+        <p class="import-obs" *ngIf="temOLivro(sel.titulo_livro)">
+          Isto substitui as anotacoes atuais do seu caso de mesmo titulo.
+        </p>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Toast -->
+  <div class="toast" [class.show]="toastMsg">{{ toastMsg }}</div>
+
+</ion-content>

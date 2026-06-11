@@ -28,10 +28,10 @@ export class BibliotecaPage implements ViewWillEnter {
   carregando = true;
   erro = '';
 
-
+  // filtro de busca
   filtro = '';
 
- 
+  // modal de criar
   addAberto = false;
   novoTitulo = '';
   novaDescricao = '';
@@ -40,15 +40,15 @@ export class BibliotecaPage implements ViewWillEnter {
   novaCapaPreview = '';
   salvandoCriar = false;
 
- 
+  // modal de detalhe/edicao
   detalheAberto = false;
-  sel: any = null;         
+  sel: any = null;             // livro selecionado
   selStatus = 'aberto';
   selDescricao = '';
   editandoDescricao = false;
   salvandoEditar = false;
 
-  
+  // modal de exclusao
   deleteAberto = false;
   livroParaExcluir: any = null;
   excluindo = false;
@@ -77,7 +77,7 @@ export class BibliotecaPage implements ViewWillEnter {
     }
   }
 
-
+  /** Livros filtrados pela busca (titulo). */
   get livrosFiltrados(): any[] {
     const q = this.filtro.toLowerCase().trim();
     if (!q) return this.livros;
@@ -88,7 +88,7 @@ export class BibliotecaPage implements ViewWillEnter {
     this.router.navigateByUrl('/home');
   }
 
-
+  // ---------- CRIAR ----------
   abrirCriar() {
     this.novoTitulo = '';
     this.novaDescricao = '';
@@ -125,7 +125,7 @@ export class BibliotecaPage implements ViewWillEnter {
     }
   }
 
-
+  // ---------- DETALHE / EDITAR ----------
   abrirDetalhe(livro: any) {
     this.sel = livro;
     this.selStatus = livro.status;
@@ -156,12 +156,18 @@ export class BibliotecaPage implements ViewWillEnter {
   }
 
   irParaQuadro(numero?: number) {
-    
+    if (!this.sel) return;
+    this.detalheAberto = false;
+    if (numero != null) {
+      this.router.navigate(['/quadro', this.sel.id, numero]);
+    } else {
+      this.router.navigate(['/quadro', this.sel.id]);
+    }
   }
 
-
+  // ---------- EXCLUIR ----------
   abrirExcluir(livro: any, event: Event) {
-    event.stopPropagation();   
+    event.stopPropagation();   // nao abre o detalhe
     this.livroParaExcluir = livro;
     this.deleteAberto = true;
   }

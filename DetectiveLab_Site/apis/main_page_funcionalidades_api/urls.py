@@ -16,7 +16,7 @@ urlpatterns = [
     path('livros/<int:livro_id>/quadro/<int:numero>/', views.quadro_detail, name='api_quadro_num'),
     path('capitulos/<int:capitulo_id>/salvar/', views.salvar_quadro, name='api_salvar_quadro'),
     path('livros/<int:livro_id>/novo-capitulo/', views.novo_capitulo, name='api_novo_capitulo'),
-
+    path('capitulos/<int:capitulo_id>/ocr/', views.importar_ocr, name='api_importar_ocr'),
     # Evidencias
     path('evidencias/', views.evidencias_list, name='api_evidencias'),
     path('evidencias/exportar/', views.exportar_anotacoes, name='api_exportar'),

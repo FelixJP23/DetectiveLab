@@ -1,0 +1,87 @@
+<ion-content [fullscreen]="true" class="mural-content">
+
+  <!-- Header -->
+  <header class="app-header">
+    <button class="icon-btn" (click)="voltar()"><ion-icon name="arrow-back"></ion-icon></button>
+    <div class="header-titulo">
+      <span class="titulo-main">MESTRES DO MISTERIO</span>
+      <span class="titulo-sub">Selecione um dossie</span>
+    </div>
+    <div style="width: 24px;"></div>
+  </header>
+
+  <!-- Estados -->
+  <div class="estado-centro" *ngIf="carregando">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+  <div class="estado-centro" *ngIf="!carregando && erro">
+    <p class="vazio-texto">{{ erro }}</p>
+  </div>
+
+  <!-- Vazio -->
+  <div class="estado-centro coluna" *ngIf="!carregando && !erro && !temAutores">
+    <ion-icon name="library-outline" class="vazio-icon"></ion-icon>
+    <p class="vazio-texto">Nenhum autor foi cadastrado ainda. Volte em breve para explorar os mestres do misterio.</p>
+  </div>
+
+  <ng-container *ngIf="!carregando && !erro && temAutores">
+
+    <!-- Filtro de tradicao -->
+    <div class="trad-tabs">
+      <button class="trad-tab" [class.ativo]="tradicaoAtiva==='americana'"
+              (click)="trocarTradicao('americana')">AMERICANA</button>
+      <button class="trad-tab" [class.ativo]="tradicaoAtiva==='japonesa'"
+              (click)="trocarTradicao('japonesa')">JAPONESA</button>
+    </div>
+
+    <!-- Faixa horizontal de autores -->
+    <div class="autores-faixa">
+      <button class="autor-chip" *ngFor="let a of autoresAtivos"
+              [class.ativo]="autorAtual?.id === a.id" (click)="selecionarAutor(a)">
+        {{ a.nome }}
+      </button>
+      <p class="faixa-vazia" *ngIf="autoresAtivos.length === 0">
+        Nenhum autor nesta tradicao.
+      </p>
+    </div>
+
+    <!-- Area do autor -->
+    <div class="autor-area" *ngIf="autorAtual">
+      <!-- Foto de fundo (atras de tudo) -->
+      <div class="autor-bg">
+        <img *ngIf="autorAtual.foto_url" [src]="autorAtual.foto_url" alt="Retrato"
+             [class.trocando]="trocando">
+        <div class="bg-grad-v"></div>
+        <div class="bg-grad-h"></div>
+      </div>
+
+      <!-- Conteudo (sempre acima da imagem) -->
+      <div class="autor-conteudo" [class.trocando]="trocando">
+        <p class="trad-label">
+          <span class="trad-bar"></span> {{ tradicaoLabel() }}
+        </p>
+        <h1 class="autor-nome">{{ autorAtual.nome }}</h1>
+        <p class="autor-bio">{{ autorAtual.biografia }}</p>
+
+        <div class="obras-bloco">
+          <h3 class="obras-titulo">PRINCIPAIS OBRAS</h3>
+          <div class="obras-faixa" *ngIf="autorAtual.obras?.length > 0">
+            <div class="obra-card" *ngFor="let o of autorAtual.obras">
+              <div class="obra-thumb">
+                <img *ngIf="o.capa_url" [src]="o.capa_url" [alt]="o.titulo">
+                <ion-icon *ngIf="!o.capa_url" name="book-outline"></ion-icon>
+              </div>
+              <p class="obra-titulo">{{ o.titulo }}</p>
+              <p class="obra-ano">{{ o.ano }}</p>
+            </div>
+          </div>
+          <p class="obras-vazio" *ngIf="!autorAtual.obras || autorAtual.obras.length === 0">
+            Nenhuma obra cadastrada.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+</ion-content>
